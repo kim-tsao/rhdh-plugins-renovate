@@ -18,7 +18,25 @@
   "npm": {
     "minimumReleaseAge": "3 days"
   },
+  "major": {
+    "dependencyDashboardApproval": true
+  },  
   "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchCurrentVersion": "!/^0/",
+      "groupName": "DevDependencies (non-major)",
+      "automerge": true
+    },    
+    {
+      "extends": ["packages:test"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchCurrentVersion": "!/^0/",
+      "groupName": "Test packages (minor)",
+      "automerge": true,
+      "matchDepNames": ["/^@playwright//"]
+    },    
     {
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions"
