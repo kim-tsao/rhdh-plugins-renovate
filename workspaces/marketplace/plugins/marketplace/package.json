@@ -35,7 +35,7 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/core-components": "^0.15.1",
+    "@backstage/core-components": "^0.16.0",
     "@backstage/core-plugin-api": "^1.10.0",
     "@backstage/theme": "^0.6.0",
     "@mui/material": "^5.12.2",
@@ -48,7 +48,7 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.28.0",
+    "@backstage/cli": "^0.29.0",
     "@backstage/core-app-api": "^1.15.1",
     "@backstage/dev-utils": "^1.1.2",
     "@backstage/test-utils": "^1.7.0",
