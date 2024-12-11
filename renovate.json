@@ -26,15 +26,13 @@
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
       "matchCurrentVersion": "!/^0/",
-      "groupName": "DevDependencies (non-major)",
-      "automerge": true
+      "groupName": "DevDependencies (non-major)"
     },    
     {
       "extends": ["packages:test"],
       "matchUpdateTypes": ["patch", "minor"],
       "matchCurrentVersion": "!/^0/",
       "groupName": "Test packages (minor)",
-      "automerge": true,
       "matchDepNames": ["/^@playwright//"]
     },    
     {
@@ -52,7 +50,17 @@
     {
       "matchPackageNames": ["yn"],
       "allowedVersions": "<5.0.0"
-    }
+    },
+    {
+      "description": "ignore updates to all backstage core updates",
+      "groupName": "Backstage packages",
+      "dependencyDashboardApproval": true,
+      "enabled": false,
+      "matchPackageNames": [
+        "/^@backstage//"
+      ]
+    }   
+
   ],
   "ignorePaths": ["**/dist-dynamic/**"]
 }
