@@ -24,17 +24,58 @@
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["patch", "minor"],
+      "matchUpdateTypes": ["minor"],
       "matchCurrentVersion": "!/^0/",
-      "groupName": "DevDependencies (non-major)"
+      "groupName": "DevDependencies (minor)"
     },    
     {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch"],
+      "matchCurrentVersion": "!/^0/",
+      "groupName": "DevDependencies (minor)"
+    },      
+    {
       "extends": ["packages:test"],
-      "matchUpdateTypes": ["patch", "minor"],
+      "matchUpdateTypes": ["minor"],
       "matchCurrentVersion": "!/^0/",
       "groupName": "Test packages (minor)",
-      "matchDepNames": ["/^@playwright//"]
+      "matchDepNames": ["/^@playwright/{/,}**", "msw", "/^@testing-library/{/,}**"]
+    }, 
+    {
+      "extends": ["packages:test"],
+      "matchUpdateTypes": ["patch"],
+      "matchCurrentVersion": "!/^0/",
+      "groupName": "Test packages (patch)",
+      "matchDepNames": ["/^@playwright/{/,}**", "msw", "/^@testing-library/{/,}**"]
+    },           
+    {
+      "groupName": "Kie Tools (minor)",
+      "matchDepNames": ["/^@kie-tools-core/{/,}**"],
+      "matchUpdateTypes": ["minor"]
+    },
+    {
+      "groupName": "Kie Tools (minor)",
+      "matchDepNames": ["/^@kie-tools-core/{/,}**"],
+      "matchUpdateTypes": ["patch"]
     },    
+    {
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "groupName": "types (minor)",
+      "matchPackageNames": [
+        "@types/{/,}**"
+      ]
+    },    
+    {
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "groupName": "types (patch)",
+      "matchPackageNames": [
+        "@types/{/,}**"
+      ]
+    },      
     {
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions"
@@ -52,14 +93,10 @@
       "allowedVersions": "<5.0.0"
     },
     {
-      "description": "ignore updates to all backstage core updates",
-      "groupName": "Backstage packages",
-      "dependencyDashboardApproval": true,
+      "groupName": "Core Backstage packages",
       "enabled": false,
-      "matchPackageNames": [
-        "/^@backstage//"
-      ]
-    }   
+      "matchDepNames": ["/^@backstage//"]
+    }
 
   ],
   "ignorePaths": ["**/dist-dynamic/**"]
