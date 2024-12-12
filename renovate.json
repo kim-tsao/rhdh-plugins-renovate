@@ -46,16 +46,16 @@
       "matchUpdateTypes": ["patch"],
       "matchCurrentVersion": "!/^0/",
       "groupName": "Test packages (patch)",
-      "matchDepNames": ["/^@playwright/{/,}**", "msw", "/^@testing-library/{/,}**"]
+      "matchDepNames": ["@playwright/{/,}**", "msw", "@testing-library/{/,}**"]
     },           
     {
       "groupName": "Kie Tools (minor)",
-      "matchDepNames": ["/^@kie-tools-core/{/,}**"],
+      "matchDepNames": ["@kie-tools-core/{/,}**"],
       "matchUpdateTypes": ["minor"]
     },
     {
       "groupName": "Kie Tools (minor)",
-      "matchDepNames": ["/^@kie-tools-core/{/,}**"],
+      "matchDepNames": ["@kie-tools-core/{/,}**"],
       "matchUpdateTypes": ["patch"]
     },    
     {
@@ -94,7 +94,7 @@
     },
     {
       "groupName": "Core Backstage packages",
-      "enabled": false,
+      "dependencyDashboardApproval": true,
       "matchDepNames": ["/^@backstage//"]
     }
 
