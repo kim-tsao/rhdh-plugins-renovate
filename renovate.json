@@ -23,42 +23,72 @@
   },  
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor"],
-      "groupName": "DevDependencies (minor)"
+      "groupName": "DevDependencies (minor)",
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ]
     },    
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["patch"],
-      "groupName": "DevDependencies (patch)"
+      "groupName": "DevDependencies (patch)",
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ]
     },      
     {
-      "matchUpdateTypes": ["minor"],
       "groupName": "Test packages (minor)",
-      "matchDepNames": ["@playwright/{/,}**", "msw", "@testing-library/{/,}**"]
+      "matchDepNames": [
+        "@playwright/{/,}**", 
+        "msw", 
+        "@testing-library/{/,}**"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ]      
     }, 
     {
-      "matchUpdateTypes": ["patch"],
       "groupName": "Test packages (patch)",
-      "matchDepNames": ["@playwright/{/,}**", "msw", "@testing-library/{/,}**"]
+      "matchDepNames": [
+        "@playwright/{/,}**", 
+        "msw", 
+        "@testing-library/{/,}**"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ]
     },           
     {
       "groupName": "Kie Tools (minor)",
-      "matchDepNames": ["@kie-tools-core/{/,}**", "@kie-tools/{/,}**"],
-      "matchUpdateTypes": ["minor"]
+      "matchDepNames": [
+        "@kie-tools-core/{/,}**", 
+        "@kie-tools/{/,}**"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ]
     },
     {
       "groupName": "Kie Tools (patch)",
-      "matchDepNames": ["@kie-tools-core/{/,}**", "@kie-tools/{/,}**"],
-      "matchUpdateTypes": ["patch"]
+      "matchDepNames": [
+        "@kie-tools-core/{/,}**", 
+        "@kie-tools/{/,}**"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ]
     },    
     {
-      "matchUpdateTypes": [
-        "minor"
-      ],
       "groupName": "types (minor)",
       "matchPackageNames": [
         "@types/{/,}**"
+      ],
+      "matchUpdateTypes": [
+        "minor"
       ]
     },    
     {
