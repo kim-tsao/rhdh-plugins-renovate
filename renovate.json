@@ -35,14 +35,12 @@
       "groupName": "DevDependencies (minor)"
     },      
     {
-      "extends": ["packages:test"],
       "matchUpdateTypes": ["minor"],
       "matchCurrentVersion": "!/^0/",
       "groupName": "Test packages (minor)",
-      "matchDepNames": ["/^@playwright/{/,}**", "msw", "/^@testing-library/{/,}**"]
+      "matchDepNames": ["@playwright/{/,}**", "msw", "@testing-library/{/,}**"]
     }, 
     {
-      "extends": ["packages:test"],
       "matchUpdateTypes": ["patch"],
       "matchCurrentVersion": "!/^0/",
       "groupName": "Test packages (patch)",
@@ -50,12 +48,12 @@
     },           
     {
       "groupName": "Kie Tools (minor)",
-      "matchDepNames": ["@kie-tools-core/{/,}**"],
+      "matchDepNames": ["@kie-tools-core/{/,}**", "@kie-tools/{/,}**"],
       "matchUpdateTypes": ["minor"]
     },
     {
       "groupName": "Kie Tools (minor)",
-      "matchDepNames": ["@kie-tools-core/{/,}**"],
+      "matchDepNames": ["@kie-tools-core/{/,}**", "@kie-tools/{/,}**"],
       "matchUpdateTypes": ["patch"]
     },    
     {
