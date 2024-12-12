@@ -25,24 +25,20 @@
     {
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor"],
-      "matchCurrentVersion": "!/^0/",
       "groupName": "DevDependencies (minor)"
     },    
     {
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch"],
-      "matchCurrentVersion": "!/^0/",
-      "groupName": "DevDependencies (minor)"
+      "groupName": "DevDependencies (patch)"
     },      
     {
       "matchUpdateTypes": ["minor"],
-      "matchCurrentVersion": "!/^0/",
       "groupName": "Test packages (minor)",
       "matchDepNames": ["@playwright/{/,}**", "msw", "@testing-library/{/,}**"]
     }, 
     {
       "matchUpdateTypes": ["patch"],
-      "matchCurrentVersion": "!/^0/",
       "groupName": "Test packages (patch)",
       "matchDepNames": ["@playwright/{/,}**", "msw", "@testing-library/{/,}**"]
     },           
