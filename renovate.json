@@ -52,7 +52,7 @@
       "matchUpdateTypes": ["minor"]
     },
     {
-      "groupName": "Kie Tools (minor)",
+      "groupName": "Kie Tools (patch)",
       "matchDepNames": ["@kie-tools-core/{/,}**", "@kie-tools/{/,}**"],
       "matchUpdateTypes": ["patch"]
     },    
