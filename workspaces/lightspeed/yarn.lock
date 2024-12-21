@@ -8128,7 +8128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/core@npm:>=0.2.26 <0.3.0, @langchain/core@npm:^0.2.30":
+"@langchain/core@npm:^0.2.30":
   version: 0.2.36
   resolution: "@langchain/core@npm:0.2.36"
   dependencies:
@@ -8147,16 +8147,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/openai@npm:^0.2.8":
-  version: 0.2.11
-  resolution: "@langchain/openai@npm:0.2.11"
+"@langchain/openai@npm:^0.3.0":
+  version: 0.3.14
+  resolution: "@langchain/openai@npm:0.3.14"
   dependencies:
-    "@langchain/core": ">=0.2.26 <0.3.0"
     js-tiktoken: ^1.0.12
-    openai: ^4.57.3
+    openai: ^4.71.0
     zod: ^3.22.4
     zod-to-json-schema: ^3.22.3
-  checksum: afd192901ff5996008f5d2988ceba09847701b9832503ca0b75c4ba919d3df1be547571c78c8e024aef29ba592e4d4c6f7e16bcb487f21077667ec311da7cd55
+  peerDependencies:
+    "@langchain/core": ">=0.2.26 <0.4.0"
+  checksum: f06de47da4a5f2888a847e2843353ca0775aae961dd9aa16d625da1e3c026986507cb9c87f09c2cf376a36a840ab0c46bd2c521f8d17cac02bdd4f95dcfb0b5e
   languageName: node
   linkType: hard
 
@@ -10842,7 +10843,7 @@ __metadata:
     "@backstage/plugin-permission-node": ^0.8.5
     "@ianvs/prettier-plugin-sort-imports": ^4.4.0
     "@langchain/core": ^0.2.30
-    "@langchain/openai": ^0.2.8
+    "@langchain/openai": ^0.3.0
     "@red-hat-developer-hub/backstage-plugin-lightspeed-common": "workspace:^"
     "@spotify/prettier-config": ^15.0.0
     "@types/express": 4.17.21
@@ -28364,9 +28365,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.52.6, openai@npm:^4.57.3":
-  version: 4.72.0
-  resolution: "openai@npm:4.72.0"
+"openai@npm:^4.52.6, openai@npm:^4.71.0":
+  version: 4.76.1
+  resolution: "openai@npm:4.76.1"
   dependencies:
     "@types/node": ^18.11.18
     "@types/node-fetch": ^2.6.4
@@ -28382,7 +28383,7 @@ __metadata:
       optional: true
   bin:
     openai: bin/cli
-  checksum: 483fac9ea6b3215b50be054b16c35d181563d0d2ac5dd9d802d373742dbe2a499d6531bb3d3267ea8835a1563dc185e64b0aecf541b508e576bea8db5884bcf0
+  checksum: 5c62144317604f71420d6e03b6afbeab5c90e3736f4547655e341f51e9944c8fd6b6d2b34181c505bee60d05e6cffa7031bc7b4093605daa2631ef62872213ca
   languageName: node
   linkType: hard
 
