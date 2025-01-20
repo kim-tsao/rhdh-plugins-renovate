@@ -10091,7 +10091,7 @@ __metadata:
     tss-react: 4.9.13
   peerDependencies:
     react: 16.13.1 || ^17.0.0 || ^18.2.0
-    react-router-dom: 6.26.2
+    react-router-dom: 6.28.2
   languageName: unknown
   linkType: soft
 
