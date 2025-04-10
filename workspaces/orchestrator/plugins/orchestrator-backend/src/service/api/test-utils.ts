@@ -38,7 +38,6 @@ interface WorkflowOverviewParams {
   lastTriggeredMs?: number;
   lastRunStatus?: ProcessInstanceStateValues;
   category?: string;
-  avgDurationMs?: number;
   description?: string;
 }
 export function generateTestWorkflowOverview(
@@ -52,7 +51,6 @@ export function generateTestWorkflowOverview(
       params.lastTriggeredMs ?? Date.parse('2024-02-09T10:34:56Z'),
     lastRunStatus: params.lastRunStatus ?? ProcessInstanceState.Completed,
     category: params.category ?? 'assessment', // validate input
-    avgDurationMs: params.avgDurationMs ?? 1000,
     description: params.description ?? 'Test Workflow Description',
   };
 }
@@ -63,7 +61,6 @@ export function generateTestWorkflowOverviewList(
 ): WorkflowOverviewListResult {
   const res: WorkflowOverviewListResult = {
     items: [],
-    totalCount: howmany,
     offset: 0,
     limit: 0,
   };

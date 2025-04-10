@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import moment from 'moment';
 
 import {
@@ -36,6 +37,7 @@ import {
   WorkflowOverview,
   WorkflowOverviewDTO,
   WorkflowRunStatusDTO,
+  type ProcessInstanceStatusDTO as ProcessInstanceStatusDTOType,
 } from '@red-hat-developer-hub/backstage-plugin-orchestrator-common';
 
 // Mapping functions
@@ -46,7 +48,6 @@ export function mapToWorkflowOverviewDTO(
     name: overview.name,
     format: overview.format,
     workflowId: overview.workflowId,
-    avgDurationMs: overview.avgDurationMs,
     description: overview.description,
     lastRunId: overview.lastRunId,
     lastRunStatus: overview.lastRunStatus
@@ -54,6 +55,7 @@ export function mapToWorkflowOverviewDTO(
       : undefined,
     lastTriggeredMs: overview.lastTriggeredMs,
     category: mapWorkflowCategoryDTOFromString(overview.category),
+    isAvailable: overview.isAvailable,
   };
 }
 
@@ -97,49 +99,18 @@ export function mapWorkflowCategoryDTO(
 }
 
 export function getProcessInstancesStatusDTOFromString(
-  state?: string,
-): ProcessInstanceStatusDTO {
-  switch (state) {
-    case ProcessInstanceState.Active.valueOf():
-      return 'Active';
-    case ProcessInstanceState.Error.valueOf():
-      return 'Error';
-    case ProcessInstanceState.Completed.valueOf():
-      return 'Completed';
-    case ProcessInstanceState.Aborted.valueOf():
-      return 'Aborted';
-    case ProcessInstanceState.Suspended.valueOf():
-      return 'Suspended';
-    case ProcessInstanceState.Pending.valueOf():
-      return 'Pending';
-    default:
-      throw new Error(
-        `state ${state} is not one of the values of type ProcessInstanceStatusDTO`,
-      );
+  state: string,
+): ProcessInstanceStatusDTOType {
+  if (
+    !Object.values(ProcessInstanceStatusDTO).includes(
+      state as ProcessInstanceStatusDTOType,
+    )
+  ) {
+    throw new Error(
+      `state ${state} is not one of the values of type ProcessInstanceStatusDTO`,
+    );
   }
-}
-
-export function getProcessInstanceStateFromStatusDTOString(
-  status?: ProcessInstanceStatusDTO,
-): string {
-  switch (status) {
-    case 'Active':
-      return ProcessInstanceState.Active.valueOf();
-    case 'Error':
-      return ProcessInstanceState.Error.valueOf();
-    case 'Completed':
-      return ProcessInstanceState.Completed.valueOf();
-    case 'Aborted':
-      return ProcessInstanceState.Aborted.valueOf();
-    case 'Suspended':
-      return ProcessInstanceState.Suspended.valueOf();
-    case 'Pending':
-      return ProcessInstanceState.Pending.valueOf();
-    default:
-      throw new Error(
-        `status ${status} is not one of the values of type ProcessInstanceState`,
-      );
-  }
+  return state as ProcessInstanceStatusDTOType;
 }
 
 export function mapToProcessInstanceDTO(
@@ -173,7 +144,9 @@ export function mapToProcessInstanceDTO(
     duration: duration,
     // @ts-ignore
     workflowdata: variables?.workflowdata,
-    status: getProcessInstancesStatusDTOFromString(processInstance.state),
+    state: processInstance.state
+      ? getProcessInstancesStatusDTOFromString(processInstance.state)
+      : undefined,
     nodes: processInstance.nodes.map(mapToNodeInstanceDTO),
   };
 }

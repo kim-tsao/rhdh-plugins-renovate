@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,66 +13,74 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 
-import { Content, InfoCard } from '@backstage/core-components';
+import React, { useState } from 'react';
+import { useAsync } from 'react-use';
+import useObservable from 'react-use/esm/useObservable';
 
-import { Grid, makeStyles } from '@material-ui/core';
+import {
+  CodeSnippet,
+  Content,
+  InfoCard,
+  Link,
+} from '@backstage/core-components';
+import { appThemeApiRef, useApi } from '@backstage/core-plugin-api';
+import { usePermission } from '@backstage/plugin-permission-react';
+
+import { Box, Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import moment from 'moment';
 
 import {
   AssessedProcessInstanceDTO,
+  capitalize,
+  InputSchemaResponseDTO,
+  orchestratorAdminViewPermission,
   ProcessInstanceDTO,
+  WorkflowDataDTO,
 } from '@red-hat-developer-hub/backstage-plugin-orchestrator-common';
 
+import { orchestratorApiRef } from '../../src/api/api';
 import { VALUE_UNAVAILABLE } from '../constants';
-import { EditorViewKind, WorkflowEditor } from './WorkflowEditor';
+import { InfoDialog } from './InfoDialog';
+import { WorkflowInputs } from './WorkflowInputs';
 import { WorkflowProgress } from './WorkflowProgress';
 import { WorkflowResult } from './WorkflowResult';
 import { WorkflowRunDetail } from './WorkflowRunDetail';
 import { WorkflowRunDetails } from './WorkflowRunDetails';
-import { WorkflowVariablesViewer } from './WorkflowVariablesViewer';
 
 export const mapProcessInstanceToDetails = (
   instance: ProcessInstanceDTO,
 ): WorkflowRunDetail => {
-  const name = instance.processName || instance.processId;
   const start = instance.start ? moment(instance.start) : undefined;
   let duration: string = VALUE_UNAVAILABLE;
   if (start && instance.end) {
     const end = moment(instance.end);
     duration = moment.duration(start.diff(end)).humanize();
   }
-
   const started = start?.toDate().toLocaleString() ?? VALUE_UNAVAILABLE;
 
   return {
     id: instance.id,
-    name,
+    processName: instance.processName || VALUE_UNAVAILABLE,
     workflowId: instance.processId,
-    started,
+    start: started,
     duration,
     category: instance.category,
-    status: instance.status,
+    state: instance.state,
     description: instance.description,
     businessKey: instance.businessKey,
   };
 };
 
-const useStyles = makeStyles(_ => ({
-  topRowCard: {
-    height: '20rem',
-  },
-  middleRowCard: {
-    height: '20rem',
+const useStyles = makeStyles(() => ({
+  topRowCard: () => ({
+    height: '21rem',
     overflow: 'auto',
-    wordBreak: 'break-word',
-  },
+  }),
   bottomRowCard: {
-    minHeight: '40rem',
-    height: '100%',
+    height: '42rem',
+    overflow: 'auto',
   },
-  autoOverflow: { overflow: 'auto' },
   recommendedLabelContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -81,10 +89,46 @@ const useStyles = makeStyles(_ => ({
   recommendedLabel: { margin: '0 0.25rem' },
 }));
 
+const VariablesDialogContent = ({
+  instanceVariables,
+}: {
+  instanceVariables: WorkflowDataDTO;
+}) => {
+  const appThemeApi = useApi(appThemeApiRef);
+  const activeThemeId = useObservable(
+    appThemeApi.activeThemeId$(),
+    appThemeApi.getActiveThemeId(),
+  );
+
+  return (
+    <Box>
+      {Object.entries(instanceVariables).map(([key, value]) => (
+        <div key={key} style={{ marginBottom: '16px' }}>
+          <Typography variant="h6" style={{ marginBottom: '8px' }}>
+            {capitalize(key)}
+          </Typography>
+          <CodeSnippet
+            text={JSON.stringify(value, null, 2)}
+            language="json"
+            showLineNumbers
+            showCopyCodeButton
+            customStyle={{
+              color: activeThemeId === 'dark' ? '#abb2bf' : 'd3d3d3',
+              backgroundColor: activeThemeId === 'dark' ? '#151515' : '#F0F0F0',
+              padding: '25px 0',
+            }}
+          />
+        </div>
+      ))}
+    </Box>
+  );
+};
+
 export const WorkflowInstancePageContent: React.FC<{
   assessedInstance: AssessedProcessInstanceDTO;
 }> = ({ assessedInstance }) => {
   const styles = useStyles();
+  const orchestratorApi = useApi(orchestratorApiRef);
 
   const details = React.useMemo(
     () => mapProcessInstanceToDetails(assessedInstance.instance),
@@ -92,7 +136,7 @@ export const WorkflowInstancePageContent: React.FC<{
   );
 
   const workflowdata = assessedInstance.instance?.workflowdata;
-  let instanceVariables;
+  let instanceVariables: WorkflowDataDTO = {};
   if (workflowdata) {
     instanceVariables = {
       /* Since we are about to remove just the top-level property, shallow copy of the object is sufficient */
@@ -102,15 +146,75 @@ export const WorkflowInstancePageContent: React.FC<{
       delete instanceVariables.result;
     }
   }
+  const workflowId = assessedInstance.instance.processId;
+  const instanceId = assessedInstance.instance.id;
+  const {
+    value,
+    loading,
+    error: responseError,
+  } = useAsync(async (): Promise<InputSchemaResponseDTO> => {
+    const res = await orchestratorApi.getWorkflowDataInputSchema(
+      workflowId,
+      instanceId,
+    );
+    return res.data;
+  }, [orchestratorApi, workflowId]);
+
+  const [isVariablesDialogOpen, setIsVariablesDialogOpen] = useState(false);
+
+  const toggleVariablesDialog = React.useCallback(() => {
+    setIsVariablesDialogOpen(prev => !prev);
+  }, []);
+
+  const adminView = usePermission({
+    permission: orchestratorAdminViewPermission,
+  });
+
+  const viewVariables = adminView.allowed && (
+    <Link
+      to="#"
+      onClick={e => {
+        e.preventDefault();
+        toggleVariablesDialog();
+      }}
+    >
+      <Typography
+        variant="subtitle2"
+        component="div"
+        style={{ textAlign: 'right' }}
+      >
+        <b>View variables</b>
+      </Typography>
+    </Link>
+  );
 
   return (
     <Content noPadding>
+      <InfoDialog
+        title="Run Variables"
+        onClose={toggleVariablesDialog}
+        open={isVariablesDialogOpen}
+        dialogActions={
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={toggleVariablesDialog}
+          >
+            Close
+          </Button>
+        }
+        children={
+          <VariablesDialogContent instanceVariables={instanceVariables} />
+        }
+        wideDialog
+      />
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <InfoCard
             title="Details"
             divider={false}
             className={styles.topRowCard}
+            icon={viewVariables}
           >
             <WorkflowRunDetails
               details={details}
@@ -120,39 +224,19 @@ export const WorkflowInstancePageContent: React.FC<{
         </Grid>
 
         <Grid item xs={6}>
-          <InfoCard
-            title="Variables"
-            divider={false}
-            className={styles.middleRowCard}
-            cardClassName={styles.autoOverflow}
-          >
-            {instanceVariables && (
-              <WorkflowVariablesViewer variables={instanceVariables} />
-            )}
-            {!instanceVariables && (
-              <div>The workflow instance has no variables</div>
-            )}
-          </InfoCard>
-        </Grid>
-        <Grid item xs={6}>
           <WorkflowResult
+            className={styles.topRowCard}
             assessedInstance={assessedInstance}
-            className={styles.middleRowCard}
           />
         </Grid>
 
         <Grid item xs={6}>
-          <InfoCard
-            title="Workflow definition"
-            divider={false}
+          <WorkflowInputs
             className={styles.bottomRowCard}
-          >
-            <WorkflowEditor
-              workflowId={assessedInstance.instance.processId}
-              kind={EditorViewKind.DIAGRAM_VIEWER}
-              editorMode="text"
-            />
-          </InfoCard>
+            value={value}
+            loading={loading}
+            responseError={responseError}
+          />
         </Grid>
 
         <Grid item xs={6}>
@@ -160,12 +244,11 @@ export const WorkflowInstancePageContent: React.FC<{
             title="Workflow progress"
             divider={false}
             className={styles.bottomRowCard}
-            cardClassName={styles.autoOverflow}
           >
             <WorkflowProgress
               workflowError={assessedInstance.instance.error}
               workflowNodes={assessedInstance.instance.nodes}
-              workflowStatus={assessedInstance.instance.status}
+              workflowStatus={assessedInstance.instance.state}
             />
           </InfoCard>
         </Grid>

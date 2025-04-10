@@ -1,5 +1,77 @@
 ### Dependencies
 
+## 1.12.0
+
+### Minor Changes
+
+- 95b14e6: Backstage version bump to v1.36.1
+
+### Patch Changes
+
+- 4a1f79b: fixing extra apis call on added repository list
+- 680ede5: Updated dependency `@mui/icons-material` to `5.16.14`.
+  Updated dependency `@mui/styles` to `5.16.14`.
+  Updated dependency `@mui/material` to `5.16.14`.
+  Updated dependency `@mui/styled-engine` to `5.16.14`.
+- Updated dependencies [95b14e6]
+  - @red-hat-developer-hub/backstage-plugin-bulk-import-common@1.6.0
+
+## 1.11.0
+
+### Minor Changes
+
+- fbbd37f: Backstage version bump to v1.35.0
+
+### Patch Changes
+
+- 28769f6: Update Readme to point to right link
+- a87d02d: Updated dependency `start-server-and-test` to `2.0.10`.
+  Updated dependency `sass` to `1.83.4`.
+  Updated dependency `ts-loader` to `9.5.2`.
+- Updated dependencies [fbbd37f]
+  - @red-hat-developer-hub/backstage-plugin-bulk-import-common@1.5.0
+
+## 1.10.8
+
+### Patch Changes
+
+- b47ad99: Implemented Server Side Sorting for `GET /imports`
+
+## 1.10.7
+
+### Patch Changes
+
+- f627fd2: Updated dependency `@mui/icons-material` to `5.16.13`.
+  Updated dependency `@mui/material` to `5.16.13`.
+  Updated dependency `@mui/styles` to `5.16.13`.
+- e9e670c: Updated dependency `@mui/icons-material` to `5.16.11`.
+- 18547a0: Updated dependency `msw` to `1.3.5`.
+- d59e940: Updated dependency `@openapitools/openapi-generator-cli` to `2.15.3`.
+  Updated dependency `openapicmd` to `2.6.1`.
+  Updated dependency `prettier` to `3.4.2`.
+- 2743f5b: Updated dependency `start-server-and-test` to `2.0.9`.
+- 414250a: Updated dependency `@playwright/test` to `1.49.1`.
+- Updated dependencies [d59e940]
+  - @red-hat-developer-hub/backstage-plugin-bulk-import-common@1.4.2
+
+## 1.10.6
+
+### Patch Changes
+
+- 462bfde: Persist changes made in the preview pull request form when PR is waiting to be approved
+
+## 1.10.5
+
+### Patch Changes
+
+- ea3e1df: fix add repository pagination padding/position
+
+## 1.10.4
+
+### Patch Changes
+
+- 734d971: Fixed a bug in the bulk-import plugin where the "Check All" checkbox was incorrectly selected when the total number of selected repositories across multiple pages matched the number of rows in the current table
+
 ## 1.10.3
 
 ### Patch Changes

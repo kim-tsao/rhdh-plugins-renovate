@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 import { Client, fetchExchange, gql } from '@urql/core';
@@ -101,10 +102,10 @@ export class DataIndexService {
 
     this.logger.debug(`Introspection query result: ${JSON.stringify(result)}`);
 
-    if (result?.error) {
-      this.logger.error(`Error executing introspection query ${result.error}`);
-      throw result.error;
-    }
+    this.handleGraphqlClientError(
+      'Error executing introspection query',
+      result,
+    );
 
     const pairs: IntrospectionField[] = [];
     if (result?.data?.__type?.inputFields) {
@@ -128,31 +129,6 @@ export class DataIndexService {
     return pairs;
   }
 
-  public async abortWorkflowInstance(instanceId: string): Promise<void> {
-    this.logger.info(`Aborting workflow instance ${instanceId}`);
-    const ProcessInstanceAbortMutationDocument = gql`
-      mutation ProcessInstanceAbortMutation($id: String) {
-        ProcessInstanceAbort(id: $id)
-      }
-    `;
-
-    const result = await this.client.mutation(
-      ProcessInstanceAbortMutationDocument,
-      { id: instanceId },
-    );
-
-    this.logger.debug(
-      `Abort workflow instance result: ${JSON.stringify(result)}`,
-    );
-
-    if (result.error) {
-      throw new Error(
-        `Error aborting workflow instance ${instanceId}: ${result.error}`,
-      );
-    }
-    this.logger.debug(`Successfully aborted workflow instance ${instanceId}`);
-  }
-
   public async fetchWorkflowInfo(
     definitionId: string,
   ): Promise<WorkflowInfo | undefined> {
@@ -164,10 +140,7 @@ export class DataIndexService {
       `Get workflow definition result: ${JSON.stringify(result)}`,
     );
 
-    if (result.error) {
-      this.logger.error(`Error fetching workflow definition ${result.error}`);
-      throw result.error;
-    }
+    this.handleGraphqlClientError('Error fetching workflow definition', result);
 
     const processDefinitions = result.data.ProcessDefinitions as WorkflowInfo[];
 
@@ -188,10 +161,10 @@ export class DataIndexService {
       `Get workflow service urls result: ${JSON.stringify(result)}`,
     );
 
-    if (result.error) {
-      this.logger.error(`Error fetching workflow service urls ${result.error}`);
-      throw result.error;
-    }
+    this.handleGraphqlClientError(
+      'Error fetching workflow service urls',
+      result,
+    );
 
     const processDefinitions = result.data.ProcessDefinitions as WorkflowInfo[];
     return processDefinitions
@@ -242,12 +215,10 @@ export class DataIndexService {
       `Get workflow definitions result: ${JSON.stringify(result)}`,
     );
 
-    if (result.error) {
-      this.logger.error(
-        `Error fetching data index swf results ${result.error}`,
-      );
-      throw result.error;
-    }
+    this.handleGraphqlClientError(
+      'Error fetching data index swf results',
+      result,
+    );
 
     return result.data.ProcessDefinitions;
   }
@@ -306,14 +277,16 @@ export class DataIndexService {
 
     this.logger.debug(`GraphQL query: ${graphQlQuery}`);
 
-    const result = await this.client.query(graphQlQuery, {});
-
+    const result = await this.client.query<{
+      ProcessInstances: ProcessInstance[];
+    }>(graphQlQuery, {});
     this.logger.debug(
       `Fetch process instances result: ${JSON.stringify(result)}`,
     );
 
-    const processInstancesSrc = result.data
-      .ProcessInstances as ProcessInstance[];
+    this.handleGraphqlClientError('Error when fetching instances', result);
+
+    const processInstancesSrc = result.data ? result.data.ProcessInstances : [];
 
     const processInstances = await Promise.all(
       processInstancesSrc.map(async instance => {
@@ -321,50 +294,6 @@ export class DataIndexService {
       }),
     );
     return processInstances;
-  }
-
-  public async fetchInstancesTotalCount(
-    definitionIds?: string[],
-    filter?: Filter,
-  ): Promise<number> {
-    const definitionIdsCondition = definitionIds
-      ? `processId: {in: ${JSON.stringify(definitionIds)}}`
-      : undefined;
-    this.initInputProcessDefinitionArgs();
-    const filterCondition = filter
-      ? buildFilterCondition(
-          await this.inspectInputArgument('ProcessInstance'),
-          'ProcessInstance',
-          filter,
-        )
-      : '';
-
-    let whereClause: string | undefined;
-    if (definitionIds && filter) {
-      whereClause = `and: [{${definitionIdsCondition}}, {${filterCondition}}]`;
-    } else if (definitionIdsCondition || filterCondition) {
-      whereClause = definitionIdsCondition ?? filterCondition;
-    }
-
-    const graphQlQuery = buildGraphQlQuery({
-      type: 'ProcessInstances',
-      queryBody: 'id',
-      whereClause,
-    });
-    this.logger.debug(`GraphQL query: ${graphQlQuery}`);
-
-    const result = await this.client.query(graphQlQuery, {});
-
-    if (result.error) {
-      this.logger.error(
-        `Error when fetching instances total count: ${result.error}`,
-      );
-      throw result.error;
-    }
-
-    const idArr = result.data.ProcessInstances as ProcessInstance[];
-
-    return idArr.length;
   }
 
   private async getWorkflowDefinitionFromInstance(instance: ProcessInstance) {
@@ -395,10 +324,10 @@ export class DataIndexService {
       `Fetch workflow source result: ${JSON.stringify(result)}`,
     );
 
-    if (result.error) {
-      this.logger.error(`Error when fetching workflow source: ${result.error}`);
-      return undefined;
-    }
+    this.handleGraphqlClientError(
+      'Error when fetching workflow source',
+      result,
+    );
 
     const processDefinitions = result.data.ProcessDefinitions as WorkflowInfo[];
 
@@ -423,12 +352,10 @@ export class DataIndexService {
       `Fetch workflow instances result: ${JSON.stringify(result)}`,
     );
 
-    if (result.error) {
-      this.logger.error(
-        `Error when fetching workflow instances: ${result.error}`,
-      );
-      throw result.error;
-    }
+    this.handleGraphqlClientError(
+      'Error when fetching workflow instances',
+      result,
+    );
 
     return result.data.ProcessInstances;
   }
@@ -444,12 +371,10 @@ export class DataIndexService {
       `Fetch process instance variables result: ${JSON.stringify(result)}`,
     );
 
-    if (result.error) {
-      this.logger.error(
-        `Error when fetching process instance variables: ${result.error}`,
-      );
-      throw result.error;
-    }
+    this.handleGraphqlClientError(
+      'Error when fetching process instance variables',
+      result,
+    );
 
     const processInstances = result.data.ProcessInstances as ProcessInstance[];
 
@@ -471,12 +396,10 @@ export class DataIndexService {
       `Fetch process id from instance result: ${JSON.stringify(result)}`,
     );
 
-    if (result.error) {
-      this.logger.error(
-        `Error when fetching process id from instance: ${result.error}`,
-      );
-      throw result.error;
-    }
+    this.handleGraphqlClientError(
+      'Error when fetching process id from instance',
+      result,
+    );
 
     const processInstances = result.data.ProcessInstances as ProcessInstance[];
 
@@ -532,12 +455,10 @@ export class DataIndexService {
       `Fetch process instance result: ${JSON.stringify(result)}`,
     );
 
-    if (result.error) {
-      this.logger.error(
-        `Error when fetching process instances: ${result.error}`,
-      );
-      throw result.error;
-    }
+    this.handleGraphqlClientError(
+      'Error when fetching process instances',
+      result,
+    );
 
     const processInstances = result.data.ProcessInstances as ProcessInstance[];
 
@@ -561,5 +482,20 @@ export class DataIndexService {
       instance.description = workflowDefinitionSrc.description;
     }
     return instance;
+  }
+
+  private handleGraphqlClientError(scenario: string, result: any) {
+    if (!result?.error) {
+      return;
+    }
+    this.logger.error(`${scenario} ${result}`);
+    const networkError = result.error.networkError?.cause?.message;
+    if (networkError) {
+      const toThrow = new Error(`${result.error.message}. ${networkError}`);
+      toThrow.name = 'Network Error';
+      throw toThrow;
+    } else {
+      throw result.error;
+    }
   }
 }

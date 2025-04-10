@@ -24,13 +24,13 @@ All URIs are relative to *http://localhost*
 ## Documentation for Models
 
  - [AssessedProcessInstanceDTO](./Models/AssessedProcessInstanceDTO.md)
+ - [AuthToken](./Models/AuthToken.md)
  - [ErrorResponse](./Models/ErrorResponse.md)
  - [ExecuteWorkflowRequestDTO](./Models/ExecuteWorkflowRequestDTO.md)
  - [ExecuteWorkflowResponseDTO](./Models/ExecuteWorkflowResponseDTO.md)
  - [FieldFilter](./Models/FieldFilter.md)
  - [FieldFilter_value](./Models/FieldFilter_value.md)
  - [Filter](./Models/Filter.md)
- - [GetInstancesRequest](./Models/GetInstancesRequest.md)
  - [GetOverviewsRequestParams](./Models/GetOverviewsRequestParams.md)
  - [InputSchemaResponseDTO](./Models/InputSchemaResponseDTO.md)
  - [LogicalFilter](./Models/LogicalFilter.md)

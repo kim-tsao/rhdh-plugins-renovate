@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,4 +20,8 @@
  * @packageDocumentation
  */
 
+export * from './annotations';
+export * from './api';
+export * from './consts';
 export * from './types';
+export * from './utils';

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 import { WorkflowExecutionResponse } from '@red-hat-developer-hub/backstage-plugin-orchestrator-common';
@@ -131,7 +132,7 @@ describe('SonataFlowService', () => {
       return {
         method: 'POST',
         body: JSON.stringify(inputData),
-        headers: { 'content-type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
       };
     };
 
@@ -185,7 +186,7 @@ describe('SonataFlowService', () => {
         'Execute workflow successful. Response: {"id":"workflow-123","status":"completed"}',
       );
       // Verify that all other logger methods were not called
-      expect(loggerMock.debug).toHaveBeenCalledTimes(1);
+      expect(loggerMock.debug).toHaveBeenCalledTimes(2);
       expect(loggerMock.info).not.toHaveBeenCalled();
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(loggerMock.warn).not.toHaveBeenCalled();
@@ -287,6 +288,7 @@ describe('SonataFlowService', () => {
       const result = await sonataFlowService.createPrefixFetchErrorMessage(
         TEST_URL,
         mockResponse,
+        mockResponseJson,
         'POST',
       );
 
@@ -307,6 +309,7 @@ describe('SonataFlowService', () => {
       const result = await sonataFlowService.createPrefixFetchErrorMessage(
         TEST_URL,
         mockResponse,
+        mockResponseJson,
       );
 
       // Then
@@ -325,6 +328,7 @@ describe('SonataFlowService', () => {
       const result = await sonataFlowService.createPrefixFetchErrorMessage(
         TEST_URL,
         mockResponse,
+        mockResponseJson,
       );
 
       // Then
@@ -341,6 +345,7 @@ describe('SonataFlowService', () => {
       const result = await sonataFlowService.createPrefixFetchErrorMessage(
         TEST_URL,
         mockResponse,
+        mockResponseJson,
       );
 
       // Then
@@ -360,6 +365,7 @@ describe('SonataFlowService', () => {
       const result = await sonataFlowService.createPrefixFetchErrorMessage(
         TEST_URL,
         mockResponse,
+        {},
       );
 
       // Then

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 
-import { InfoCard, Link } from '@backstage/core-components';
+import React, { ReactNode } from 'react';
+
+import {
+  InfoCard,
+  Link,
+  StructuredMetadataTable,
+} from '@backstage/core-components';
 import { RouteFunc, useApi, useRouteRef } from '@backstage/core-plugin-api';
 import { AboutField } from '@backstage/plugin-catalog';
 
 import {
+  Box,
   CircularProgress,
   Grid,
   List,
   ListItem,
   makeStyles,
-  Typography,
 } from '@material-ui/core';
-import DotIcon from '@material-ui/icons/FiberManualRecord';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 import {
   AssessedProcessInstanceDTO,
@@ -36,11 +41,9 @@ import {
   QUERY_PARAM_ASSESSMENT_INSTANCE_ID,
   WorkflowOverviewDTO,
   WorkflowResultDTO,
-  WorkflowResultDTOCompletedWithEnum,
 } from '@red-hat-developer-hub/backstage-plugin-orchestrator-common';
 
 import { orchestratorApiRef } from '../api';
-import { VALUE_UNAVAILABLE } from '../constants';
 import { executeWorkflowRouteRef } from '../routes';
 import { buildUrl } from '../utils/UrlUtils';
 import {
@@ -58,6 +61,11 @@ const useStyles = makeStyles(theme => ({
   links: {
     padding: '0px',
   },
+  values: {
+    '& tr > td': {
+      paddingLeft: '0px',
+    },
+  },
   errorIcon: {
     color: theme.palette.error.main,
   },
@@ -66,7 +74,7 @@ const useStyles = makeStyles(theme => ({
 const finalStates: ProcessInstanceStatusDTO[] = [
   ProcessInstanceStatusDTO.Error,
   ProcessInstanceStatusDTO.Completed,
-  ProcessInstanceStatusDTO.Aborted,
+
   ProcessInstanceStatusDTO.Suspended,
 ];
 
@@ -74,53 +82,79 @@ const ResultMessage = ({
   status,
   error,
   resultMessage,
-  completedWith,
 }: {
   status?: ProcessInstanceStatusDTO;
   error?: ProcessInstanceErrorDTO;
   resultMessage?: WorkflowResultDTO['message'];
-  completedWith: WorkflowResultDTO['completedWith'];
 }) => {
-  const styles = useStyles();
-
   const errorMessage = error?.message || error?.toString();
-  let noResult = <></>;
-  if (!resultMessage && !errorMessage) {
-    if (status && finalStates.includes(status)) {
-      noResult = (
-        <i>The workflow provided no additional info about the status.</i>
+
+  let statusComponent: ReactNode = <></>;
+
+  if (error) {
+    // The resultMessage won't be displayed even if it's defined when there's an error.
+
+    if (status === ProcessInstanceStatusDTO.Completed) {
+      // we are receiving confusing data from the backend - Completed but with error message
+      statusComponent = (
+        <Box sx={{ width: '100%' }}>
+          <Alert severity="warning">
+            <AlertTitle>Run completed with message</AlertTitle>
+            {errorMessage}
+          </Alert>
+        </Box>
       );
     } else {
-      noResult = (
-        <Typography>
-          <CircularProgress size="0.75rem" />
-          &nbsp;The workflow has not yet provided additional info about the
-          status.
-        </Typography>
+      statusComponent = (
+        <Box sx={{ width: '100%' }}>
+          <Alert severity="error">
+            <AlertTitle>Run has failed</AlertTitle>
+            {errorMessage}
+          </Alert>
+        </Box>
+      );
+    }
+  } else if (!error && resultMessage) {
+    statusComponent = (
+      <Box sx={{ width: '100%' }}>
+        <Alert severity="success">
+          <AlertTitle>Run completed</AlertTitle>
+          {resultMessage}
+        </Alert>
+      </Box>
+    );
+  } else if (!error && !resultMessage) {
+    if (status === ProcessInstanceStatusDTO.Aborted) {
+      statusComponent = (
+        <Box sx={{ width: '100%' }}>
+          <Alert severity="info">
+            <AlertTitle> Run has aborted</AlertTitle>
+          </Alert>
+        </Box>
+      );
+    } else if (status && finalStates.includes(status)) {
+      statusComponent = (
+        <Box sx={{ width: '100%' }}>
+          <Alert severity="success">
+            <AlertTitle>Run completed</AlertTitle>
+            The workflow provided no additional info about the status.
+          </Alert>
+        </Box>
+      );
+    } else {
+      statusComponent = (
+        <Box sx={{ width: '100%' }}>
+          <Alert severity="info">
+            <AlertTitle>
+              <CircularProgress size="0.75rem" /> Workflow is Running...
+            </AlertTitle>
+            Results will be displayed here once the run is complete.
+          </Alert>
+        </Box>
       );
     }
   }
-
-  return (
-    <>
-      {resultMessage && (
-        <Typography>
-          {completedWith === WorkflowResultDTOCompletedWithEnum.Error && (
-            <>
-              <DotIcon
-                style={{ fontSize: '0.75rem' }}
-                className={styles.errorIcon}
-              />
-              &nbsp;
-            </>
-          )}
-          {resultMessage}
-        </Typography>
-      )}
-      {errorMessage && <b>{errorMessage}</b>}
-      {noResult}
-    </>
-  );
+  return statusComponent;
 };
 
 const NextWorkflows = ({
@@ -235,27 +269,23 @@ const WorkflowOutputs = ({
 
   const links = outputs?.filter(item => item.format === 'link');
   const nonLinks = outputs?.filter(item => item.format !== 'link');
+  const nonLinksAsObject = nonLinks.reduce<{
+    [key: string]: any;
+  }>((data, item) => {
+    let value = item.value || '';
+    if (typeof value !== 'string') {
+      // This is a workaround for malformed returned data. It should not happen if the sender does WorkflowResult validation properly.
+      if (typeof value === 'object') {
+        value = `Object: ${JSON.stringify(value)}`;
+      } else {
+        value = 'Unexpected type';
+      }
+    }
+    return { ...data, [item.key]: value };
+  }, {});
 
   return (
     <>
-      {nonLinks.map(item => {
-        let value = item.value || VALUE_UNAVAILABLE;
-        if (typeof value !== 'string') {
-          // This is a workaround for malformed returned data. It should not happen if the sender does WorkflowResult validation properly.
-          if (typeof value === 'object') {
-            value = `Object: ${JSON.stringify(value)}`;
-          } else {
-            value = 'Unexpected type';
-          }
-        }
-
-        return (
-          <Grid item md={6} key={item.key} className={styles.outputGrid}>
-            <AboutField label={item.key} value={value as string} />
-          </Grid>
-        );
-      })}
-
       {links?.length > 0 && (
         <Grid item md={12} key="__links" className={styles.links}>
           <AboutField label="Links">
@@ -276,6 +306,14 @@ const WorkflowOutputs = ({
           </AboutField>
         </Grid>
       )}
+
+      {Object.keys(nonLinksAsObject).length > 0 && (
+        <Grid item md={12} key="non__links" className={styles.values}>
+          <AboutField label="Values">
+            <StructuredMetadataTable dense metadata={nonLinksAsObject} />
+          </AboutField>
+        </Grid>
+      )}
     </>
   );
 };
@@ -283,7 +321,8 @@ const WorkflowOutputs = ({
 export const WorkflowResult: React.FC<{
   assessedInstance: AssessedProcessInstanceDTO;
   className: string;
-}> = ({ assessedInstance, className }) => {
+  cardClassName?: string;
+}> = ({ assessedInstance, className, cardClassName }) => {
   const instance = assessedInstance.instance;
   const result = instance.workflowdata?.result;
 
@@ -292,14 +331,14 @@ export const WorkflowResult: React.FC<{
       title="Results"
       subheader={
         <ResultMessage
-          status={instance.status}
+          status={instance.state}
           error={instance.error}
           resultMessage={result?.message}
-          completedWith={result?.completedWith}
         />
       }
       divider={false}
       className={className}
+      cardClassName={cardClassName}
     >
       <Grid container alignContent="flex-start">
         <NextWorkflows

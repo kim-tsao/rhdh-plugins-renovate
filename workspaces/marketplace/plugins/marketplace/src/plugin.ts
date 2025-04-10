@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
-  createApiFactory,
-  createRoutableExtension,
   createPlugin,
+  createRoutableExtension,
+  type IconComponent,
+  createApiFactory,
   discoveryApiRef,
   fetchApiRef,
+  createComponentExtension,
 } from '@backstage/core-plugin-api';
 
-import { rootRouteRef } from './routes';
-import { marketplaceApiRef, MarketplaceClient } from './api';
+import MUIMarketplaceIcon from '@mui/icons-material/ShoppingBasketOutlined';
+
+import { MarketplaceBackendClient } from '@red-hat-developer-hub/backstage-plugin-marketplace-common';
+
+import { marketplaceApiRef } from './api';
+import { allRoutes } from './routes';
 
 /**
  * Marketplace Plugin
@@ -30,9 +37,7 @@ import { marketplaceApiRef, MarketplaceClient } from './api';
  */
 export const marketplacePlugin = createPlugin({
   id: 'marketplace',
-  routes: {
-    root: rootRouteRef,
-  },
+  routes: allRoutes,
   apis: [
     createApiFactory({
       api: marketplaceApiRef,
@@ -41,7 +46,7 @@ export const marketplacePlugin = createPlugin({
         fetchApi: fetchApiRef,
       },
       factory: ({ discoveryApi, fetchApi }) =>
-        new MarketplaceClient({
+        new MarketplaceBackendClient({
           discoveryApi,
           fetchApi,
         }),
@@ -50,14 +55,65 @@ export const marketplacePlugin = createPlugin({
 });
 
 /**
- * Marketplace Page
+ * Marketplace page with routes for different pages.
  * @public
  */
-export const MarketplacePage = marketplacePlugin.provide(
+export const MarketplaceFullPageRouter = marketplacePlugin.provide(
   createRoutableExtension({
     name: 'MarketplacePage',
     component: () =>
-      import('./components/MarketplacePage').then(m => m.MarketplacePage),
-    mountPoint: rootRouteRef,
+      import('./pages/MarketplaceFullPageRouter').then(
+        m => m.MarketplaceFullPageRouter,
+      ),
+    mountPoint: allRoutes.rootRouteRef,
   }),
 );
+
+/**
+ * Marketplace page with header and tabs.
+ * @public
+ */
+export const MarketplaceTabbedPageRouter = marketplacePlugin.provide(
+  createRoutableExtension({
+    name: 'MarketplaceTabbedPageRouter',
+    component: () =>
+      import('./pages/MarketplaceTabbedPageRouter').then(
+        m => m.MarketplaceTabbedPageRouter,
+      ),
+    mountPoint: allRoutes.rootRouteRef,
+  }),
+);
+
+/**
+ * @public
+ */
+export const DynamicMarketplacePluginRouter = marketplacePlugin.provide(
+  createRoutableExtension({
+    name: 'DynamicMarketplacePluginRouter',
+    component: () =>
+      import('./pages/DynamicMarketplacePluginRouter').then(
+        m => m.DynamicMarketplacePluginRouter,
+      ),
+    mountPoint: allRoutes.rootRouteRef,
+  }),
+);
+
+/**
+ * @public
+ */
+export const DynamicMarketplacePluginContent = marketplacePlugin.provide(
+  createComponentExtension({
+    name: 'DynamicMarketplacePluginContent',
+    component: {
+      lazy: () =>
+        import('./pages/DynamicMarketplacePluginRouter').then(
+          m => m.DynamicMarketplacePluginContent,
+        ),
+    },
+  }),
+);
+
+/**
+ * @public
+ */
+export const MarketplaceIcon: IconComponent = MUIMarketplaceIcon;

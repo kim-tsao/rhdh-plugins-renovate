@@ -1,5 +1,5 @@
 app:
-  title: Scaffolded Backstage App
+  title: Backstage App
   baseUrl: http://localhost:3000
 
 organization:
@@ -76,33 +76,39 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow:
+        [
+          Component,
+          System,
+          API,
+          Resource,
+          Plugin,
+          PluginCollection,
+          Package,
+          Location,
+        ]
   locations:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
-      target: ../../examples/entities.yaml
-
-    # Local example template
-    - type: file
-      target: ../../examples/template/template.yaml
+      target: ../../catalog-info.yaml
       rules:
-        - allow: [Template]
-
-    # Local example organizational data
+        - allow: [Component]
     - type: file
-      target: ../../examples/org.yaml
+      target: ../../examples/all-orgs.yaml
       rules:
-        - allow: [User, Group]
-
-    ## Uncomment these lines to add more example data
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
-
-    ## Uncomment these lines to add an example org
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
-    #   rules:
-    #     - allow: [User, Group]
+        - allow: [Group]
+    - type: file
+      target: ../../examples/all-plugins.yaml
+      rules:
+        - allow: [Plugin]
+    - type: file
+      target: ../../examples/all-collections.yaml
+      rules:
+        - allow: [PluginCollection]
+    - type: file
+      target: ../../examples/all-packages.yaml
+      rules:
+        - allow: [Package]
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options

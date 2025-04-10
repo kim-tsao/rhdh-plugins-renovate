@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { http, HttpResponse } from 'msw';
 
 const localHostAndPort = 'localhost:443';
 export const LOCAL_AI_ADDR = `http://${localHostAndPort}/v1`;
+export const mockModelRes = {
+  object: 'list',
+  data: [
+    {
+      id: 'ibm-granite-8b-code-instruct',
+      object: 'model',
+    },
+  ],
+};
 
 function loadTestFixture(filePathFromFixturesDir: string) {
   return require(`${__dirname}/${filePathFromFixturesDir}`);
@@ -46,15 +56,23 @@ export const handlers = [
   }),
 
   http.get(`${LOCAL_AI_ADDR}/models`, () => {
-    const mockModelRes = {
-      object: 'list',
-      data: [
-        {
-          id: 'ibm-granite-8b-code-instruct',
-          object: 'model',
-        },
-      ],
-    };
     return HttpResponse.json(mockModelRes);
+  }),
+
+  // Catch-all handler for unknown paths
+  http.all(`${LOCAL_AI_ADDR}/*`, ({ request }) => {
+    console.log(`Caught request to unknown path: ${request.url}`);
+
+    // Return a 404 response
+    return new Response(
+      JSON.stringify({
+        error: 'Not found',
+        message: `The requested resource at ${request.url} was not found`,
+      }),
+      {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }),
 ];

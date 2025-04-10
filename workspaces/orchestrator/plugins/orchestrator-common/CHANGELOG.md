@@ -1,5 +1,69 @@
 ## @red-hat-developer-hub/backstage-plugin-orchestrator-common [1.13.1](https://github.com/janus-idp/backstage-plugins/compare/@red-hat-developer-hub/backstage-plugin-orchestrator-common@1.13.0...@red-hat-developer-hub/backstage-plugin-orchestrator-common@1.13.1) (2024-08-02)
 
+## 1.26.2
+
+### Patch Changes
+
+- 691fd23: fix tests
+
+## 1.26.1
+
+### Patch Changes
+
+- 29cf5fb: Limit viewable component to specific roles
+- 754a051: Adapt UI for completedWith field removal
+
+## 1.26.0
+
+### Minor Changes
+
+- 967c377: Fixed unsupported filter operators
+
+### Patch Changes
+
+- 05a1ce0: Updated dependency `@openapitools/openapi-generator-cli` to `2.16.3`.
+- 816d8bc: Updated dependency `@openapitools/openapi-generator-cli` to `2.16.2`.
+- c7de094: add orchestrator.workflow.use among permissions in the RBAC UI
+- bee24dc: add unavailable workflows to cache and overview
+- d4fa6bf: use 'update' policy for orchestrator.workflow.use
+
+## 1.25.1
+
+### Patch Changes
+
+- d59e940: Updated dependency `@openapitools/openapi-generator-cli` to `2.15.3`.
+  Updated dependency `prettier` to `3.4.2`.
+  Updated dependency `@janus-idp/cli` to `1.19.1`.
+  Updated dependency `monaco-editor` to `0.52.2`.
+  Updated dependency `monaco-yaml` to `5.2.3`.
+  Updated dependency `sass` to `1.83.0`.
+  Updated dependency `webpack` to `5.97.1`.
+- 9cc8c89: update sonataflow devmode image
+
+## 1.25.0
+
+### Minor Changes
+
+- 5ab913b: Access can now be managed on a per-workflow basis.
+
+### Patch Changes
+
+- 5b90f96: resolve dependency issues
+
+## 1.24.3
+
+### Patch Changes
+
+- b6cf167: generate openapi spec api-doc
+- 1d4cfa1: update openapi flpath-1893
+
+## 1.24.2
+
+### Patch Changes
+
+- 9f61eb0: execute API should allow no inputs
+- bab8daa: The parent assessment link is shown again thanks to fixing passing of the businessKey when "execute" action is trigerred.
+
 ## 1.24.1
 
 ### Patch Changes

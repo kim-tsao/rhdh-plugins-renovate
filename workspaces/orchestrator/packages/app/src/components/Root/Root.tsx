@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   Link,
   Sidebar,
@@ -40,6 +41,8 @@ import GroupIcon from '@mui/icons-material/People';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
 import { OrchestratorIcon } from '@red-hat-developer-hub/backstage-plugin-orchestrator';
+import { NotificationsSidebarItem } from '@backstage/plugin-notifications';
+import { Administration } from '@backstage-community/plugin-rbac';
 import React, { PropsWithChildren } from 'react';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
@@ -100,6 +103,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           {/* End global nav */}
           <SidebarDivider />
           <SidebarScrollWrapper>
+            <NotificationsSidebarItem />
             <SidebarItem
               icon={OrchestratorIcon}
               to="orchestrator"
@@ -109,6 +113,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         </SidebarGroup>
         <SidebarSpace />
         <SidebarDivider />
+        <Administration />
         <SidebarGroup
           label="Settings"
           icon={<UserSettingsSignInAvatar />}

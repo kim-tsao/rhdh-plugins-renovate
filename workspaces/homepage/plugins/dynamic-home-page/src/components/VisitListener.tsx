@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 
 import { VisitListener as VisitListenerComponent } from '@backstage/plugin-home';
-import { useHomePageMountPoints } from '../hooks/useHomePageMountPoints';
+import { useDynamicHomePageCards } from '../hooks/useDynamicHomePageCards';
 
 export const VisitListener = () => {
-  const allHomePageMountPoints = useHomePageMountPoints();
+  const cards = useDynamicHomePageCards();
 
   const shouldLoadVisitListener = React.useMemo<boolean>(() => {
-    if (!allHomePageMountPoints) {
+    if (!cards) {
       return false;
     }
 
@@ -31,10 +32,10 @@ export const VisitListener = () => {
       'Extension(TopVisitedCard)',
     ];
 
-    return allHomePageMountPoints.some(card =>
+    return cards.some(card =>
       requiresVisitListener.includes(card.Component.displayName!),
     );
-  }, [allHomePageMountPoints]);
+  }, [cards]);
 
   return shouldLoadVisitListener ? <VisitListenerComponent /> : null;
 };

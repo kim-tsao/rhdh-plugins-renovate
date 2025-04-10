@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import type { NextFunction, Request, Response } from 'express';
 
 import { QueryRequestBody } from './types';
@@ -24,30 +25,16 @@ export const validateCompletionsRequest = (
 ) => {
   const reqData: QueryRequestBody = req.body;
 
-  if (
-    typeof reqData.conversation_id !== 'string' ||
-    reqData.conversation_id.trim() === ''
-  ) {
-    return res.status(400).json({
-      error: 'conversation_id is required and must be a non-empty string',
-    });
-  }
-
-  // TODO: Need to extract out the user_id from conversation_id, and verify with the login user entity
-
-  if (
-    typeof reqData.serverURL !== 'string' ||
-    reqData.serverURL.trim() === ''
-  ) {
-    return res
-      .status(400)
-      .json({ error: 'serverURL is required and must be a non-empty string' });
-  }
-
   if (typeof reqData.model !== 'string' || reqData.model.trim() === '') {
     return res
       .status(400)
       .json({ error: 'model is required and must be a non-empty string' });
+  }
+
+  if (typeof reqData.provider !== 'string' || reqData.provider.trim() === '') {
+    return res
+      .status(400)
+      .json({ error: 'provider is required and must be a non-empty string' });
   }
 
   if (typeof reqData.query !== 'string' || reqData.query.trim() === '') {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 import {
+  AuthToken,
   extractWorkflowFormat,
   Filter,
   fromWorkflowSource,
@@ -43,14 +45,22 @@ export class SonataFlowService {
   }): Promise<WorkflowInfo | undefined> {
     const urlToFetch = `${args.serviceUrl}/management/processes/${args.definitionId}`;
     const response = await fetch(urlToFetch);
-
+    const jsonResponse = await response.json();
     if (response.ok) {
-      const json = await response.json();
-      this.logger.debug(`Fetch workflow info result: ${JSON.stringify(json)}`);
-      return json;
+      this.logger.debug(
+        `Fetch workflow info result: ${JSON.stringify(jsonResponse)}`,
+      );
+      return jsonResponse;
     }
+    this.logger.error(
+      `Fetch workflow info failed with: ${JSON.stringify(jsonResponse)}`,
+    );
     throw new Error(
-      await this.createPrefixFetchErrorMessage(urlToFetch, response),
+      await this.createPrefixFetchErrorMessage(
+        urlToFetch,
+        response,
+        jsonResponse,
+      ),
     );
   }
 
@@ -91,16 +101,34 @@ export class SonataFlowService {
     definitionId: string;
     serviceUrl: string;
     inputData?: ProcessInstanceVariables;
+    authTokens?: Array<AuthToken>;
     businessKey?: string;
   }): Promise<WorkflowExecutionResponse | undefined> {
     const urlToFetch = args.businessKey
       ? `${args.serviceUrl}/${args.definitionId}?businessKey=${args.businessKey}`
       : `${args.serviceUrl}/${args.definitionId}`;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    // Add X-Authentication headers from authTokens
+    if (args.authTokens && Array.isArray(args.authTokens)) {
+      args.authTokens.forEach(tokenObj => {
+        if (tokenObj.provider && tokenObj.token) {
+          const headerKey = `X-Authentication-${tokenObj.provider}`;
+          headers[headerKey] = String(tokenObj.token); // Ensure token is a string
+        }
+      });
+    } else {
+      this.logger.debug(
+        'No authTokens provided or authTokens is not an array.',
+      );
+    }
 
     const response = await fetch(urlToFetch, {
       method: 'POST',
       body: JSON.stringify(args.inputData || {}),
-      headers: { 'content-type': 'application/json' },
+      headers,
     });
 
     const json = await response.json();
@@ -113,6 +141,7 @@ export class SonataFlowService {
       const errorMessage = await this.createPrefixFetchErrorMessage(
         urlToFetch,
         response,
+        json,
         'POST',
       );
       this.logger.error(
@@ -141,16 +170,44 @@ export class SonataFlowService {
     });
 
     if (!response.ok) {
+      const json = await response.json();
+      this.logger.error(`Retrigger failed with: ${JSON.stringify(json)}`);
       throw new Error(
         `${await this.createPrefixFetchErrorMessage(
           urlToFetch,
           response,
+          json,
           'POST',
         )}`,
       );
     }
 
     return true;
+  }
+
+  public async abortInstance(args: {
+    definitionId: string;
+    instanceId: string;
+    serviceUrl: string;
+  }): Promise<void> {
+    const urlToFetch = `${args.serviceUrl}/management/processes/${args.definitionId}/instances/${args.instanceId}`;
+
+    const response = await fetch(urlToFetch, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      const json = await response.json();
+      this.logger.error(`Abort failed with: ${JSON.stringify(json)}`);
+      throw new Error(
+        `${await this.createPrefixFetchErrorMessage(
+          urlToFetch,
+          response,
+          json,
+          'DELETE',
+        )}`,
+      );
+    }
   }
 
   public async fetchWorkflowOverview(
@@ -209,39 +266,29 @@ export class SonataFlowService {
     return response.ok;
   }
 
-  public async updateInstanceInputData(args: {
-    definitionId: string;
-    serviceUrl: string;
-    instanceId: string;
-    inputData: ProcessInstanceVariables;
-  }): Promise<boolean> {
-    const { definitionId, serviceUrl, instanceId, inputData } = args;
-    const urlToFetch = `${serviceUrl}/${definitionId}/${instanceId}`;
-    const response = await fetch(urlToFetch, {
-      method: 'PATCH',
-      body: JSON.stringify(inputData),
-      headers: { 'content-type': 'application/json' },
-    });
-    return response.ok;
-  }
-
   public async createPrefixFetchErrorMessage(
     urlToFetch: string,
     response: Response,
+    jsonResponse: any,
     httpMethod = 'GET',
   ): Promise<string> {
-    const res = await response.json();
     const errorInfo = [];
     let errorMsg = `Request ${httpMethod} ${urlToFetch} failed with: StatusCode: ${response.status}`;
 
     if (response.statusText) {
       errorInfo.push(`StatusText: ${response.statusText}`);
     }
-    if (res?.details) {
-      errorInfo.push(`Details: ${res?.details}`);
+    if (jsonResponse?.details) {
+      errorInfo.push(`Details: ${jsonResponse?.details}`);
     }
-    if (res?.stack) {
-      errorInfo.push(`Stack: ${res?.stack}`);
+    if (jsonResponse?.stack) {
+      errorInfo.push(`Stack: ${jsonResponse?.stack}`);
+    }
+    if (jsonResponse?.message) {
+      errorInfo.push(`Message: ${jsonResponse?.message}`);
+    }
+    if (jsonResponse?.failedNodeId) {
+      errorInfo.push(`Failed Node Id: ${jsonResponse?.failedNodeId}`);
     }
     if (errorInfo.length > 0) {
       errorMsg += ` ${errorInfo.join(', ')}`;

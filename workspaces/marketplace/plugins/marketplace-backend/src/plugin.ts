@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   coreServices,
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
+import { CatalogClient } from '@backstage/catalog-client';
+
+import {
+  MarketplaceApi,
+  MarketplaceCatalogClient,
+} from '@red-hat-developer-hub/backstage-plugin-marketplace-common';
+
 import { createRouter } from './router';
-import { catalogServiceRef } from '@backstage/plugin-catalog-node/alpha';
-import { createTodoListService } from './services/TodoListService';
 
 /**
  * marketplacePlugin backend plugin
@@ -31,23 +37,23 @@ export const marketplacePlugin = createBackendPlugin({
   register(env) {
     env.registerInit({
       deps: {
-        logger: coreServices.logger,
         auth: coreServices.auth,
         httpAuth: coreServices.httpAuth,
         httpRouter: coreServices.httpRouter,
-        catalog: catalogServiceRef,
+        discovery: coreServices.discovery,
       },
-      async init({ logger, auth, httpAuth, httpRouter, catalog }) {
-        const todoListService = await createTodoListService({
-          logger,
+      async init({ auth, httpAuth, httpRouter, discovery }) {
+        const catalogApi = new CatalogClient({ discoveryApi: discovery });
+
+        const marketplaceApi: MarketplaceApi = new MarketplaceCatalogClient({
           auth,
-          catalog,
+          catalogApi,
         });
 
         httpRouter.use(
           await createRouter({
             httpAuth,
-            todoListService,
+            marketplaceApi,
           }),
         );
       },

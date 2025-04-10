@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ backend.add(import('@backstage/plugin-search-backend/alpha'));
 backend.add(import('@backstage/plugin-search-backend-module-pg/alpha'));
 
 // search collators
-backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
+backend.add(import('@backstage/plugin-search-backend-module-catalog'));
 backend.add(import('@backstage/plugin-search-backend-module-techdocs/alpha'));
 
 // kubernetes
@@ -64,4 +64,9 @@ backend.add(
   import('@red-hat-developer-hub/backstage-plugin-marketplace-backend'),
 );
 
+backend.add(
+  import(
+    '@red-hat-developer-hub/backstage-plugin-catalog-backend-module-marketplace'
+  ),
+);
 backend.start();

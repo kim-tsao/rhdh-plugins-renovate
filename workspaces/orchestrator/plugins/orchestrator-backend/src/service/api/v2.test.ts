@@ -65,7 +65,6 @@ const createMockOrchestratorService = (): OrchestratorService => {
   mockOrchestratorService.fetchWorkflowInfo = jest.fn();
   mockOrchestratorService.fetchInstances = jest.fn();
   mockOrchestratorService.fetchInstance = jest.fn();
-  mockOrchestratorService.fetchInstancesTotalCount = jest.fn();
   mockOrchestratorService.executeWorkflow = jest.fn();
   mockOrchestratorService.abortWorkflowInstance = jest.fn();
 
@@ -116,7 +115,6 @@ describe('getWorkflowOverview', () => {
       paginationInfo: {
         offset: 1,
         pageSize: 50,
-        totalCount: mockOverviewsV1.items.length,
       },
     });
   });
@@ -145,7 +143,6 @@ describe('getWorkflowOverview', () => {
       paginationInfo: {
         offset: undefined,
         pageSize: undefined,
-        totalCount: mockOverviewsV1.items.length,
       },
     });
   });
@@ -181,7 +178,6 @@ describe('getWorkflowOverview', () => {
       paginationInfo: {
         offset: 1,
         pageSize: 50,
-        totalCount: mockOverviewsV1.items.length,
       },
     });
   });
@@ -251,7 +247,6 @@ describe('getWorkflowOverview', () => {
       paginationInfo: {
         offset: 1,
         pageSize: 50,
-        totalCount: mockOverviewsV1.items.length,
       },
     });
   });
@@ -296,7 +291,6 @@ describe('getWorkflowOverviewById', () => {
     expect(overviewV2.lastTriggeredMs).toBeUndefined();
     expect(overviewV2.lastRunStatus).toBeUndefined();
     expect(overviewV2.category).toEqual('infrastructure');
-    expect(overviewV2.avgDurationMs).toBeUndefined();
     expect(overviewV2.description).toBeUndefined();
   });
 
@@ -554,7 +548,7 @@ describe('abortWorkflow', () => {
     const expectedResult = `Workflow instance ${workflowId} successfully aborted`;
 
     // Act
-    const actualResult: string = await v2.abortWorkflow(workflowId);
+    const actualResult: string = await v2.abortWorkflow('dummy', workflowId);
 
     // Assert
     expect(actualResult).toBeDefined();
@@ -568,7 +562,7 @@ describe('abortWorkflow', () => {
     ).mockRejectedValue(new Error('Simulated abort workflow error'));
 
     // Act
-    const promise = v2.abortWorkflow('instanceId');
+    const promise = v2.abortWorkflow('definitionId', 'instanceId');
 
     // Assert
     await expect(promise).rejects.toThrow('Simulated abort workflow error');

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 
+import { createStyles, makeStyles } from '@material-ui/core';
+import { ChatbotHeaderActions } from '@patternfly/chatbot';
 import {
   Dropdown,
   DropdownItem,
@@ -22,7 +25,6 @@ import {
   MenuToggle,
   MenuToggleElement,
 } from '@patternfly/react-core';
-import { ChatbotHeaderActions } from '@patternfly/virtual-assistant';
 
 type LightspeedChatBoxHeaderProps = {
   selectedModel: string;
@@ -30,12 +32,25 @@ type LightspeedChatBoxHeaderProps = {
   models: { label: string; value: string }[];
 };
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    dropdown: {
+      '& ul, & li': {
+        padding: 0,
+        margin: 0,
+      },
+    },
+  }),
+);
+
 export const LightspeedChatBoxHeader = ({
   selectedModel,
   handleSelectedModel,
   models,
 }: LightspeedChatBoxHeaderProps) => {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = React.useState(false);
+
+  const styles = useStyles();
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <MenuToggle
@@ -52,6 +67,7 @@ export const LightspeedChatBoxHeader = ({
   return (
     <ChatbotHeaderActions>
       <Dropdown
+        className={styles.dropdown}
         isOpen={isOptionsMenuOpen}
         onSelect={(_e, value) => {
           handleSelectedModel(value as string);

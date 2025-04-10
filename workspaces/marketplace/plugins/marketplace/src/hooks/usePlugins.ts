@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useApi } from '@backstage/core-plugin-api';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { marketplaceApiRef } from '../api';
+import { GetEntitiesRequest } from '@red-hat-developer-hub/backstage-plugin-marketplace-common';
 
-export const usePlugins = () => {
-  const marketplaceApi = useApi(marketplaceApiRef);
+import { useMarketplaceApi } from './useMarketplaceApi';
 
-  //   const [search, setSearch] = useQueryParamState<string | undefined>('q');
-
+export const usePlugins = (request: GetEntitiesRequest) => {
+  const marketplaceApi = useMarketplaceApi();
   return useQuery({
-    queryKey: ['plugins'],
-    queryFn: () => marketplaceApi.getPlugins(),
+    queryKey: ['marketplaceApi', 'getPlugins', request],
+    queryFn: () => marketplaceApi.getPlugins(request),
   });
 };

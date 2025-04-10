@@ -6,22 +6,20 @@ organization:
   name: Red Hat
 
 backend:
-  # Used for enabling authentication, secret is shared by all backend plugins
-  # See https://backstage.io/docs/auth/service-to-service-auth for
-  # information on the format
-  # auth:
-  #   keys:
-  #     - secret: ${BACKEND_SECRET}
   baseUrl: http://localhost:7007
+  auth:
+    externalAccess:
+      - type: static
+        options:
+          # notsecret
+          # echo mycurlpasswd | base64
+          token: bXljdXJscGFzc3dkCg==
+          subject: my-external-feed
   listen:
     port: 7007
     # Uncomment the following host directive to bind to specific interfaces
     # host: 127.0.0.1
-  csp:
-    frame-ancestors: ['http://localhost:3000', 'http://localhost:7007']
-    script-src: ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
-    script-src-elem: ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
-    connect-src: ["'self'", 'http:', 'https:', 'data:']
+
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
@@ -41,6 +39,13 @@ backend:
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations: {}
+#integrations:
+#  github:
+#    - host: github.com
+#      token: ${GITHUB_TOKEN}
+#  gitlab:
+#    - host: gitlab.com
+#      token: ${GITLAB_TOKEN}
 
 proxy:
   '/quay/api':
@@ -74,14 +79,18 @@ auth:
         clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
         signIn:
           resolvers:
-            # See https://backstage.io/docs/auth/github/provider#resolvers for more resolvers
             - resolver: emailMatchingUserEntityProfileEmail
 
 # permission:
 #   enabled: true
 #   rbac:
-#     policies-csv-file: /full/path/to/the/rbac-policy.csv
+#     policies-csv-file: ../../docs/rbac-policy.csv
 #     policyFileReload: true
+#     pluginsWithPermission:
+#       - orchestrator
+#     admin:
+#       users:
+#         - name: user:default/mareklibra
 
 scaffolder:
   {}
@@ -101,19 +110,40 @@ catalog:
       target: https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/templates.yaml
 
     - type: file
-      target: ../../users.yaml
+      target: ../../entities/users.yaml
       rules:
         - allow: [User]
+
+    - type: file
+      target: ../../entities/templates.yaml
+
+    # - type: url
+    #   target: https://github.com/mareklibra/generated-workflow-templates/blob/main/templates.yaml
 
 dynamicPlugins:
   frontend: {}
 orchestrator:
   sonataFlowService:
+    # uncomment the next line to use podman instead of docker
+    # runtime: podman
     baseUrl: http://localhost
     port: 8899
     autoStart: true
+    # If you're using a MacBook with M-series chips, uncomment the line below to use ARM images.
+    # To pull the image, you'll first need to authenticate with the registry.
+    # For more information, visit: https://red.ht/410mMNU.
+    # container:  registry.redhat.io/openshift-serverless-1/logic-swf-devmode-rhel8:1.35.0
+    # notsecret
+    notificationsBearerToken: bXljdXJscGFzc3dkCg==
+    notificationsUrl: http://host.docker.internal:7007
+    # uncomment the next line if you are using podman:
+    # notificationsUrl: http://host.containers.internal:7007
+    # By default the Dev Mode workflows are Ephemeral. If you want to persist the data across restarts,
+    # uncomment the next two lines, read more: https://www.rhdhorchestrator.io/blog/devmode-vs-prodmode/
+    # persistence:
+    #  path: ./.devModeTemp/db_persistence # this will be under packages/backend
     workflowsSource:
-      gitRepositoryUrl: https://github.com/parodos-dev/backstage-orchestrator-workflows
-      localPath: /tmp/orchestrator/repository
+      gitRepositoryUrl: https://github.com/rhdhorchestrator/backstage-orchestrator-workflows.git
+      localPath: ./.devModeTemp/repository # this will be under packages/backend
   dataIndexService:
     url: http://localhost:8899

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { Navigate, Route } from 'react-router-dom';
 import { apiDocsPlugin, ApiExplorerPage } from '@backstage/plugin-api-docs';
@@ -52,6 +53,11 @@ import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 
+import { BCTestPage } from '@red-hat-developer-hub/backstage-plugin-bc-test';
+import { MUI4TestPage } from '@red-hat-developer-hub/backstage-plugin-mui4-test';
+import { MUI5TestPage } from '@red-hat-developer-hub/backstage-plugin-mui5-test';
+import { getAllThemes } from '@red-hat-developer-hub/backstage-plugin-theme';
+
 const app = createApp({
   apis,
   bindRoutes({ bind }) {
@@ -74,6 +80,7 @@ const app = createApp({
   components: {
     SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
   },
+  themes: getAllThemes(),
 });
 
 const routes = (
@@ -110,6 +117,9 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
+    <Route path="/bc-tests" element={<BCTestPage />} />
+    <Route path="/mui4-tests" element={<MUI4TestPage />} />
+    <Route path="/mui5-tests" element={<MUI5TestPage />} />
   </FlatRoutes>
 );
 

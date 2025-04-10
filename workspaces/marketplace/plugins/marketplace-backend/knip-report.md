@@ -1,8 +1,14 @@
 # Knip report
 
-## Unused dependencies (2)
+## Unused dependencies (1)
 
-| Name                                                       | Location     | Severity |
-| :--------------------------------------------------------- | :----------- | :------- |
-| @red-hat-developer-hub/backstage-plugin-marketplace-common | package.json | error    |
-| @backstage/catalog-client                                  | package.json | error    |
+| Name              | Location          | Severity |
+| :---------------- | :---------------- | :------- |
+| @backstage/errors | package.json:39:6 | error    |
+
+## Unlisted dependencies (1)
+
+| Name                     | Location                              | Severity |
+| :----------------------- | :------------------------------------ | :------- |
+| @backstage/catalog-model | src/utils/removeVerboseSpecContent.ts | error    |
+

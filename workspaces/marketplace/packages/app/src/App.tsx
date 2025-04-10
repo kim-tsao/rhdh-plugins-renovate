@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { Navigate, Route } from 'react-router-dom';
 import { apiDocsPlugin, ApiExplorerPage } from '@backstage/plugin-api-docs';
@@ -47,8 +48,9 @@ import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 
-import { getThemes } from '@redhat-developer/red-hat-developer-hub-theme';
-import { MarketplacePage } from '@red-hat-developer-hub/backstage-plugin-marketplace';
+import { getAllThemes } from '@red-hat-developer-hub/backstage-plugin-theme';
+
+import { DynamicMarketplacePluginRouter as Marketplace } from '@red-hat-developer-hub/backstage-plugin-marketplace';
 
 import { apis } from './apis';
 import { entityPage } from './components/catalog/EntityPage';
@@ -77,7 +79,7 @@ const app = createApp({
   components: {
     SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
   },
-  themes: getThemes(),
+  themes: getAllThemes(),
 });
 
 const routes = (
@@ -114,7 +116,8 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
-    <Route path="/marketplace" element={<MarketplacePage />} />
+
+    <Route path="/extensions" element={<Marketplace />} />
   </FlatRoutes>
 );
 

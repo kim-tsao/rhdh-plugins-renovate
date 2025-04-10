@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   ProcessInstance,
   WorkflowDefinition,
@@ -88,46 +89,39 @@ describe('OrchestratorService', () => {
     });
 
     it('should execute the operation when the workflow is available', async () => {
-      dataIndexServiceMock.fetchDefinitionIdByInstanceId = jest
-        .fn()
-        .mockResolvedValue(definitionId);
       workflowCacheServiceMock.isAvailable = jest.fn().mockReturnValue(true);
-      dataIndexServiceMock.abortWorkflowInstance = jest.fn(
-        (_instanceId: string) => Promise.resolve(),
+      sonataFlowServiceMock.abortInstance = jest.fn(
+        (_args: {
+          definitionId: string;
+          instanceId: string;
+          serviceUrl: string;
+        }) => Promise.resolve(),
       );
 
       await orchestratorService.abortWorkflowInstance({
+        definitionId,
         instanceId,
+        serviceUrl,
         cacheHandler: 'skip',
       });
 
-      expect(
-        dataIndexServiceMock.fetchDefinitionIdByInstanceId,
-      ).toHaveBeenCalled();
-      expect(dataIndexServiceMock.abortWorkflowInstance).toHaveBeenCalled();
+      expect(sonataFlowServiceMock.abortInstance).toHaveBeenCalled();
     });
 
     it('should skip and not execute the operation when the workflow is not available', async () => {
-      dataIndexServiceMock.fetchDefinitionIdByInstanceId = jest
-        .fn()
-        .mockResolvedValue(definitionId);
       workflowCacheServiceMock.isAvailable = jest.fn().mockReturnValue(false);
 
       await orchestratorService.abortWorkflowInstance({
+        definitionId,
         instanceId,
+        serviceUrl,
         cacheHandler: 'skip',
       });
 
-      expect(
-        dataIndexServiceMock.fetchDefinitionIdByInstanceId,
-      ).toHaveBeenCalled();
-      expect(dataIndexServiceMock.abortWorkflowInstance).not.toHaveBeenCalled();
+      expect(sonataFlowServiceMock.abortInstance).not.toHaveBeenCalled();
     });
 
     it('should throw an error and not execute the operation when the workflow is not available', async () => {
-      dataIndexServiceMock.fetchDefinitionIdByInstanceId = jest
-        .fn()
-        .mockResolvedValue(definitionId);
       workflowCacheServiceMock.isAvailable = jest
         .fn()
         .mockImplementation(() => {
@@ -135,17 +129,16 @@ describe('OrchestratorService', () => {
         });
 
       const promise = orchestratorService.abortWorkflowInstance({
+        definitionId,
         instanceId,
+        serviceUrl,
         cacheHandler: 'throw',
       });
 
       await expect(promise).rejects.toThrow();
 
-      expect(
-        dataIndexServiceMock.fetchDefinitionIdByInstanceId,
-      ).toHaveBeenCalled();
       expect(workflowCacheServiceMock.isAvailable).toHaveBeenCalled();
-      expect(dataIndexServiceMock.abortWorkflowInstance).not.toHaveBeenCalled();
+      expect(sonataFlowServiceMock.abortInstance).not.toHaveBeenCalled();
     });
   });
 
@@ -176,34 +169,6 @@ describe('OrchestratorService', () => {
     });
   });
 
-  describe('fetchInstancesTotalCount', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-
-    it('should throw error when data index returns error', async () => {
-      const errMsg = 'Failed to get instances total count';
-      dataIndexServiceMock.fetchInstancesTotalCount = jest
-        .fn()
-        .mockImplementation(() => {
-          throw new Error(errMsg);
-        });
-      const promise = orchestratorService.fetchInstancesTotalCount();
-      await expect(promise).rejects.toThrow(errMsg);
-    });
-
-    it('should execute the operation', async () => {
-      dataIndexServiceMock.fetchInstancesTotalCount = jest
-        .fn()
-        .mockResolvedValue(instances.length);
-
-      const result = await orchestratorService.fetchInstancesTotalCount();
-
-      expect(result).toBe(instances.length);
-      expect(dataIndexServiceMock.fetchInstancesTotalCount).toHaveBeenCalled();
-    });
-  });
-
   describe('fetchWorkflowOverviews', () => {
     beforeEach(() => {
       jest.clearAllMocks();
@@ -225,6 +190,8 @@ describe('OrchestratorService', () => {
       sonataFlowServiceMock.fetchWorkflowOverviews = jest
         .fn()
         .mockResolvedValue(workflowOverviews);
+
+      workflowCacheServiceMock.isAvailable = jest.fn().mockReturnValue(true);
 
       const result = await orchestratorService.fetchWorkflowOverviews({});
 

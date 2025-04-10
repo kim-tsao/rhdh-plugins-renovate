@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Entity } from '@backstage/catalog-model';
 
 import { Repository as RepositoryResponse } from './response-types';
@@ -62,8 +63,10 @@ export type AddRepositoryData = {
   organizationUrl?: string;
   selectedRepositories?: AddedRepositories;
   catalogInfoYaml?: {
+    pullRequest?: string;
     status?: ImportStatus;
     prTemplate?: PullRequestPreview;
+    isInitialized?: boolean;
     lastUpdated?: string;
   };
   lastUpdated?: string;
@@ -96,6 +99,18 @@ export enum RepositoryStatus {
   'CODEOWNERS_FILE_NOT_FOUND_IN_REPO' = 'CODEOWNERS_FILE_NOT_FOUND_IN_REPO',
 }
 
+export enum AddedRepositoryColumnNameEnum {
+  repoName = 'repository.name', // because of property name
+  organizationUrl = 'repository.organization',
+  repoUrl = 'repository.url',
+  catalogInfoYamlLastUpdated = 'lastUpdate',
+  catalogInfoYamlStatus = 'status',
+}
+
+export enum SortingOrderEnum {
+  Asc = 'asc',
+  Desc = 'desc',
+}
 export enum RepositorySelection {
   Repository = 'repository',
   Organization = 'organization',

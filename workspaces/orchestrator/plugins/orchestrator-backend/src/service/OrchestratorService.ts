@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
+  AuthToken,
   Filter,
   ProcessInstance,
   ProcessInstanceVariables,
@@ -36,20 +38,23 @@ export class OrchestratorService {
   ) {}
 
   // Data Index Service Wrapper
+  public getWorkflowIds(): string[] {
+    return this.workflowCacheService.definitionIds;
+  }
 
   public async abortWorkflowInstance(args: {
+    definitionId: string;
     instanceId: string;
+    serviceUrl: string;
     cacheHandler?: CacheHandler;
   }): Promise<void> {
-    const { instanceId, cacheHandler } = args;
-    const definitionId =
-      await this.dataIndexService.fetchDefinitionIdByInstanceId(instanceId);
+    const { definitionId, cacheHandler } = args;
     const isWorkflowAvailable = this.workflowCacheService.isAvailable(
       definitionId,
       cacheHandler,
     );
     return isWorkflowAvailable
-      ? await this.dataIndexService.abortWorkflowInstance(instanceId)
+      ? await this.sonataFlowService.abortInstance(args)
       : undefined;
   }
 
@@ -70,29 +75,16 @@ export class OrchestratorService {
   public async fetchInstances(args: {
     pagination?: Pagination;
     filter?: Filter;
-    workflowId?: string;
+    workflowIds?: string[];
   }): Promise<ProcessInstance[]> {
-    const definitionIds = args.workflowId
-      ? [args.workflowId]
+    const definitionIds = args.workflowIds
+      ? args.workflowIds
       : this.workflowCacheService.definitionIds;
     return await this.dataIndexService.fetchInstances({
       definitionIds: definitionIds,
       pagination: args.pagination,
       filter: args.filter,
     });
-  }
-
-  public async fetchInstancesTotalCount(
-    workflowId?: string,
-    filter?: Filter,
-  ): Promise<number> {
-    const definitionIds = workflowId
-      ? [workflowId]
-      : this.workflowCacheService.definitionIds;
-    return await this.dataIndexService.fetchInstancesTotalCount(
-      definitionIds,
-      filter,
-    );
   }
 
   public async fetchWorkflowSource(args: {
@@ -173,10 +165,20 @@ export class OrchestratorService {
     pagination?: Pagination;
     filter?: Filter;
   }): Promise<WorkflowOverview[] | undefined> {
-    return await this.sonataFlowService.fetchWorkflowOverviews({
-      definitionIds: this.workflowCacheService.definitionIds,
+    const overviews = await this.sonataFlowService.fetchWorkflowOverviews({
+      definitionIds: this.workflowCacheService.definitionIds?.concat(
+        this.workflowCacheService.unavailableDefinitionIds,
+      ),
       pagination: args.pagination,
       filter: args.filter,
+    });
+
+    return overviews?.map(overview => {
+      const updatedOverview = overview;
+      updatedOverview.isAvailable = this.workflowCacheService.isAvailable(
+        updatedOverview.workflowId,
+      );
+      return updatedOverview;
     });
   }
 
@@ -184,6 +186,7 @@ export class OrchestratorService {
     definitionId: string;
     serviceUrl: string;
     inputData?: ProcessInstanceVariables;
+    authTokens?: Array<AuthToken>;
     businessKey?: string;
     cacheHandler?: CacheHandler;
   }): Promise<WorkflowExecutionResponse | undefined> {

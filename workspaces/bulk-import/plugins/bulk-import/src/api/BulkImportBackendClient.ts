@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   ConfigApi,
   createApiRef,
@@ -20,12 +21,14 @@ import {
 } from '@backstage/core-plugin-api';
 
 import {
+  AddedRepositoryColumnNameEnum,
   APITypes,
   CreateImportJobRepository,
   ImportJobResponse,
   ImportJobs,
   ImportJobStatus,
   OrgAndRepoResponse,
+  SortingOrderEnum,
 } from '../types';
 import { getApi } from '../utils/repository-utils';
 
@@ -41,6 +44,8 @@ export type BulkImportAPI = {
     page: number,
     size: number,
     searchString: string,
+    sortColumn: AddedRepositoryColumnNameEnum,
+    sortOrder: SortingOrderEnum,
   ) => Promise<ImportJobs | Response>;
   createImportJobs: (
     importRepositories: CreateImportJobRepository[],
@@ -99,11 +104,17 @@ export class BulkImportBackendClient implements BulkImportAPI {
     return jsonResponse.json();
   }
 
-  async getImportJobs(page: number, size: number, searchString: string) {
+  async getImportJobs(
+    page: number,
+    size: number,
+    searchString: string,
+    sortColumn: AddedRepositoryColumnNameEnum,
+    sortOrder: SortingOrderEnum,
+  ) {
     const { token: idToken } = await this.identityApi.getCredentials();
     const backendUrl = this.configApi.getString('backend.baseUrl');
     const jsonResponse = await fetch(
-      `${backendUrl}/api/bulk-import/imports?page=${page}&size=${size}&search=${searchString}`,
+      `${backendUrl}/api/bulk-import/imports?page=${page}&size=${size}&search=${searchString}&sortColumn=${sortColumn}&sortOrder=${sortOrder}`,
       {
         headers: {
           'Content-Type': 'application/json',

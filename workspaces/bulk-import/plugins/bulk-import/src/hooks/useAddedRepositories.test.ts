@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { mockGetImportJobs, mockGetRepositories } from '../mocks/mockData';
+import { AddedRepositoryColumnNameEnum, SortingOrderEnum } from '../types';
 import { useAddedRepositories } from './useAddedRepositories';
 
 jest.mock('@backstage/core-plugin-api', () => ({
@@ -48,7 +50,15 @@ jest.mock('formik', () => ({
 
 describe('useAddedRepositories', () => {
   it('should return import jobs', async () => {
-    const { result } = renderHook(() => useAddedRepositories(1, 5, ''));
+    const { result } = renderHook(() =>
+      useAddedRepositories(
+        1,
+        5,
+        '',
+        AddedRepositoryColumnNameEnum.repoName,
+        SortingOrderEnum.Asc,
+      ),
+    );
     await waitFor(() => {
       expect(result.current.loading).toBeFalsy();
       expect(result.current.data.totalJobs).toBe(4);

@@ -21,8 +21,9 @@ import { AxiosResponse } from 'axios';
 import {
   AssessedProcessInstanceDTO,
   ExecuteWorkflowResponseDTO,
-  GetInstancesRequest,
+  Filter,
   InputSchemaResponseDTO,
+  PaginationInfoDTO,
   ProcessInstanceListResultDTO,
   WorkflowOverviewDTO,
   WorkflowOverviewListResultDTO,
@@ -30,6 +31,11 @@ import {
 
 export interface OrchestratorApi {
   abortWorkflowInstance(instanceId: string): Promise<AxiosResponse<string>>;
+
+  retriggerInstance(
+    workflowId: string,
+    instanceId: string,
+  ): Promise<AxiosResponse<object>>;
 
   executeWorkflow(args: {
     workflowId: string;
@@ -58,7 +64,8 @@ export interface OrchestratorApi {
   >;
 
   listInstances(
-    args?: GetInstancesRequest,
+    paginationInfo?: PaginationInfoDTO,
+    filters?: Filter,
   ): Promise<AxiosResponse<ProcessInstanceListResultDTO>>;
 }
 

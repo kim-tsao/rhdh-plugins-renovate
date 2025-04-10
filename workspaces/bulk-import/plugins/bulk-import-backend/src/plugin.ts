@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ export const bulkImportPlugin = createBackendPlugin({
         httpAuth: coreServices.httpAuth,
         auth: coreServices.auth,
         catalogApi: catalogServiceRef,
+        auditor: coreServices.auditor,
       },
       async init({
         config,
@@ -51,6 +52,7 @@ export const bulkImportPlugin = createBackendPlugin({
         httpAuth,
         auth,
         catalogApi,
+        auditor,
       }) {
         const router = await createRouter({
           config,
@@ -61,6 +63,7 @@ export const bulkImportPlugin = createBackendPlugin({
           httpAuth,
           auth,
           catalogApi,
+          auditor,
         });
         http.use(router);
         http.addAuthPolicy({

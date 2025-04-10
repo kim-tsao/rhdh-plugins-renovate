@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 
 import {
@@ -38,6 +39,7 @@ import { QuickAccessApiClient, quickAccessApiRef } from './api';
 import { rootRouteRef } from './routes';
 
 import type { DynamicHomePageProps } from './components/DynamicHomePage';
+import type { DynamicCustomizableHomePageProps } from './components/DynamicCustomizableHomePage';
 import type { SearchBarProps } from './components/SearchBar';
 import type { QuickAccessCardProps } from './components/QuickAccessCard';
 import type { HeadlineProps } from './components/Headline';
@@ -46,12 +48,15 @@ import type { MarkdownCardProps } from './components/MarkdownCard';
 import type { PlaceholderProps } from './components/Placeholder';
 
 export type { DynamicHomePageProps } from './components/DynamicHomePage';
+export type { DynamicCustomizableHomePageProps } from './components/DynamicCustomizableHomePage';
 export type { SearchBarProps } from './components/SearchBar';
 export type { QuickAccessCardProps } from './components/QuickAccessCard';
 export type { HeadlineProps } from './components/Headline';
 export type { MarkdownProps } from './components/Markdown';
 export type { MarkdownCardProps } from './components/MarkdownCard';
 export type { PlaceholderProps } from './components/Placeholder';
+export type { LocalClockProps } from './components/LocalClock';
+export type { WorldClockProps } from './components/WorldClock';
 
 /**
  * Dynamic Home Page Plugin
@@ -95,6 +100,22 @@ export const DynamicHomePage: React.ComponentType<DynamicHomePageProps> =
       name: 'DynamicHomePage',
       component: () =>
         import('./components/DynamicHomePage').then(m => m.DynamicHomePage),
+      mountPoint: rootRouteRef,
+    }),
+  );
+
+/**
+ * Customizable Dynamic Home Page
+ * @public
+ */
+export const DynamicCustomizableHomePage: React.ComponentType<DynamicCustomizableHomePageProps> =
+  dynamicHomePagePlugin.provide(
+    createRoutableExtension({
+      name: 'DynamicCustomizableHomePage',
+      component: () =>
+        import('./components/DynamicCustomizableHomePage').then(
+          m => m.DynamicCustomizableHomePage,
+        ),
       mountPoint: rootRouteRef,
     }),
   );
@@ -259,6 +280,18 @@ export const VisitListener = dynamicHomePagePlugin.provide(
     component: {
       lazy: () =>
         import('./components/VisitListener').then(m => m.VisitListener),
+    },
+  }),
+);
+
+/**
+ * @public
+ */
+export const WorldClock = dynamicHomePagePlugin.provide(
+  createComponentExtension({
+    name: 'WorldClock',
+    component: {
+      lazy: () => import('./components/WorldClock').then(m => m.WorldClock),
     },
   }),
 );

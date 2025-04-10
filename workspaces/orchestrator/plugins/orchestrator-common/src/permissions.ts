@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,43 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { createPermission } from '@backstage/plugin-permission-common';
 
-export const orchestratorWorkflowInstancesReadPermission = createPermission({
-  name: 'orchestrator.workflowInstances.read',
+export const orchestratorWorkflowPermission = createPermission({
+  name: 'orchestrator.workflow',
   attributes: {
     action: 'read',
   },
 });
 
-export const orchestratorWorkflowInstanceReadPermission = createPermission({
-  name: 'orchestrator.workflowInstance.read',
+export const orchestratorWorkflowSpecificPermission = (workflowId: string) =>
+  createPermission({
+    name: `orchestrator.workflow.${workflowId}`,
+    attributes: {
+      action: 'read',
+    },
+  });
+
+export const orchestratorWorkflowUsePermission = createPermission({
+  name: 'orchestrator.workflow.use',
   attributes: {
-    action: 'read',
+    action: 'update',
   },
 });
 
-export const orchestratorWorkflowReadPermission = createPermission({
-  name: 'orchestrator.workflow.read',
+export const orchestratorWorkflowUseSpecificPermission = (workflowId: string) =>
+  createPermission({
+    name: `orchestrator.workflow.use.${workflowId}`,
+    attributes: {
+      action: 'update',
+    },
+  });
+
+export const orchestratorAdminViewPermission = createPermission({
+  name: 'orchestrator.workflowAdminView',
   attributes: {
     action: 'read',
   },
-});
-
-export const orchestratorWorkflowExecutePermission = createPermission({
-  name: 'orchestrator.workflow.execute',
-  attributes: {},
-});
-
-export const orchestratorWorkflowInstanceAbortPermission = createPermission({
-  name: 'orchestrator.workflowInstance.abort',
-  attributes: {},
 });
 
 export const orchestratorPermissions = [
-  orchestratorWorkflowReadPermission,
-  orchestratorWorkflowExecutePermission,
-  orchestratorWorkflowInstancesReadPermission,
-  orchestratorWorkflowInstanceReadPermission,
-  orchestratorWorkflowInstanceAbortPermission,
+  orchestratorWorkflowPermission,
+  orchestratorWorkflowUsePermission,
+  orchestratorAdminViewPermission,
 ];

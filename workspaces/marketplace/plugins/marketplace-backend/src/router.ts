@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,140 +13,107 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { HttpAuthService } from '@backstage/backend-plugin-api';
-import { InputError } from '@backstage/errors';
-import { z } from 'zod';
+
 import express from 'express';
 import Router from 'express-promise-router';
 
-import { MarketplacePluginEntry } from '@red-hat-developer-hub/backstage-plugin-marketplace-common';
+import { HttpAuthService } from '@backstage/backend-plugin-api';
 
-import { TodoListService } from './services/TodoListService/types';
+import {
+  decodeGetEntitiesRequest,
+  decodeGetEntityFacetsRequest,
+  MarketplaceApi,
+} from '@red-hat-developer-hub/backstage-plugin-marketplace-common';
+import { createSearchParams } from './utils/createSearchParams';
+import { removeVerboseSpecContent } from './utils/removeVerboseSpecContent';
 
 export async function createRouter({
-  httpAuth,
-  todoListService,
+  marketplaceApi,
 }: {
   httpAuth: HttpAuthService;
-  todoListService: TodoListService;
+  marketplaceApi: MarketplaceApi;
 }): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
 
-  router.get('/plugins', async (_req, res) => {
-    await new Promise(resolve => setTimeout(() => resolve(null), 1000));
+  router.get('/collections', async (req, res) => {
+    const request = decodeGetEntitiesRequest(createSearchParams(req));
+    const collections = await marketplaceApi.getCollections(request);
+    res.json(collections);
+  });
 
-    const plugins: MarketplacePluginEntry[] = [
-      {
-        metadata: {
-          name: 'airbreak',
-          title: 'Airbreak',
-          developer: 'Spotify',
-          abstract:
-            'Access Airbreak error monitoring and other integrations from within...',
+  router.get('/collections/facets', async (req, res) => {
+    const request = decodeGetEntityFacetsRequest(createSearchParams(req));
+    const facets = await marketplaceApi.getCollectionsFacets(request);
+    res.json(facets);
+  });
 
-          categories: ['Monitoring'],
-        },
-        spec: {
-          description:
-            '## Access Airbreak error monitoring and other integrations from within...',
-        },
-      },
-      {
-        metadata: {
-          name: 'airbreak2',
-          title: 'Airbreak2',
-          developer: 'Spotify',
-          abstract:
-            'Access Airbreak error monitoring and other integrations from within. Access Airbreak error monitoring and other integrations from within.',
+  router.get('/collection/:namespace/:name', async (req, res) => {
+    const collection = await marketplaceApi.getCollectionByName(
+      req.params.namespace,
+      req.params.name,
+    );
+    res.json(collection);
+  });
 
-          categories: ['Monitoring'],
-        },
-        spec: {
-          description:
-            '## Access Airbreak error monitoring and other integrations from within...',
-        },
-      },
-      {
-        metadata: {
-          name: 'airbreak3',
-          title: 'Airbreak3',
-          developer: 'Spotify',
-          abstract:
-            'Access Airbreak error monitoring and other integrations from within...',
-
-          categories: ['Monitoring'],
-        },
-        spec: {
-          description:
-            '## Access Airbreak error monitoring and other integrations from within...',
-        },
-      },
-      {
-        metadata: {
-          name: 'airbreak4',
-          title: 'Airbreak4',
-          developer: 'Spotify',
-          abstract:
-            'Access Airbreak error monitoring and other integrations from within. Access Airbreak error monitoring and other integrations from within.',
-
-          categories: ['Monitoring'],
-        },
-        spec: {
-          description:
-            '## Access Airbreak error monitoring and other integrations from within...',
-        },
-      },
-      {
-        metadata: {
-          name: 'airbreak5',
-          title: 'Airbreak5',
-          developer: 'Spotify',
-          abstract:
-            'Access Airbreak error monitoring and other integrations from within...',
-
-          categories: ['Monitoring'],
-        },
-        spec: {
-          description:
-            '## Access Airbreak error monitoring and other integrations from within...',
-        },
-      },
-    ];
-
+  router.get('/collection/:namespace/:name/plugins', async (req, res) => {
+    const plugins = await marketplaceApi.getCollectionPlugins(
+      req.params.namespace,
+      req.params.name,
+    );
+    removeVerboseSpecContent(plugins);
     res.json(plugins);
   });
 
-  // TEMPLATE NOTE:
-  // Zod is a powerful library for data validation and recommended in particular
-  // for user-defined schemas. In this case we use it for input validation too.
-  //
-  // If you want to define a schema for your API we recommend using Backstage's
-  // OpenAPI tooling: https://backstage.io/docs/next/openapi/01-getting-started
-  const todoSchema = z.object({
-    title: z.string(),
-    entityRef: z.string().optional(),
+  router.get('/packages', async (req, res) => {
+    const request = decodeGetEntitiesRequest(createSearchParams(req));
+    const packages = await marketplaceApi.getPackages(request);
+    removeVerboseSpecContent(packages.items);
+    res.json(packages);
   });
 
-  router.post('/todos', async (req, res) => {
-    const parsed = todoSchema.safeParse(req.body);
-    if (!parsed.success) {
-      throw new InputError(parsed.error.toString());
-    }
-
-    const result = await todoListService.createTodo(parsed.data, {
-      credentials: await httpAuth.credentials(req, { allow: ['user'] }),
-    });
-
-    res.status(201).json(result);
+  router.get('/packages/facets', async (req, res) => {
+    const request = decodeGetEntityFacetsRequest(createSearchParams(req));
+    const facets = await marketplaceApi.getPackagesFacets(request);
+    res.json(facets);
   });
 
-  router.get('/todos', async (_req, res) => {
-    res.json(await todoListService.listTodos());
+  router.get('/package/:namespace/:name', async (req, res) => {
+    res.json(
+      await marketplaceApi.getPackageByName(
+        req.params.namespace,
+        req.params.name,
+      ),
+    );
   });
 
-  router.get('/todos/:id', async (req, res) => {
-    res.json(await todoListService.getTodo({ id: req.params.id }));
+  router.get('/plugins', async (req, res) => {
+    const request = decodeGetEntitiesRequest(createSearchParams(req));
+    const plugins = await marketplaceApi.getPlugins(request);
+    removeVerboseSpecContent(plugins.items);
+    res.json(plugins);
+  });
+
+  router.get('/plugins/facets', async (req, res) => {
+    const request = decodeGetEntityFacetsRequest(createSearchParams(req));
+    const facets = await marketplaceApi.getPluginFacets(request);
+    res.json(facets);
+  });
+
+  router.get('/plugin/:namespace/:name', async (req, res) => {
+    const plugin = await marketplaceApi.getPluginByName(
+      req.params.namespace,
+      req.params.name,
+    );
+    res.json(plugin);
+  });
+
+  router.get('/plugin/:namespace/:name/packages', async (req, res) => {
+    const packages = await marketplaceApi.getPluginPackages(
+      req.params.namespace,
+      req.params.name,
+    );
+    res.json(packages);
   });
 
   return router;

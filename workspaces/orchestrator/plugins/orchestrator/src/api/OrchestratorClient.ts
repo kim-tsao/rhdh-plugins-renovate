@@ -30,7 +30,6 @@ import {
   DefaultApi,
   ExecuteWorkflowResponseDTO,
   Filter,
-  GetInstancesRequest,
   InputSchemaResponseDTO,
   PaginationInfoDTO,
   ProcessInstanceListResultDTO,
@@ -109,6 +108,7 @@ export class OrchestratorClient implements OrchestratorApi {
       return await defaultApi.executeWorkflow(
         args.workflowId,
         { inputData: args.parameters },
+        args.businessKey,
         reqConfigOption,
       );
     } catch (err) {
@@ -124,6 +124,24 @@ export class OrchestratorClient implements OrchestratorApi {
       await this.getDefaultReqConfig();
     try {
       return await defaultApi.abortWorkflow(instanceId, reqConfigOption);
+    } catch (err) {
+      throw getError(err);
+    }
+  }
+
+  async retriggerInstance(
+    workflowId: string,
+    instanceId: string,
+  ): Promise<AxiosResponse<object>> {
+    const defaultApi = await this.getDefaultAPI();
+    const reqConfigOption: AxiosRequestConfig =
+      await this.getDefaultReqConfig();
+    try {
+      return await defaultApi.retriggerInstance(
+        workflowId,
+        instanceId,
+        reqConfigOption,
+      );
     } catch (err) {
       throw getError(err);
     }
@@ -162,13 +180,17 @@ export class OrchestratorClient implements OrchestratorApi {
   }
 
   async listInstances(
-    args: GetInstancesRequest,
+    paginationInfo?: PaginationInfoDTO,
+    filters?: Filter,
   ): Promise<AxiosResponse<ProcessInstanceListResultDTO>> {
     const defaultApi = await this.getDefaultAPI();
     const reqConfigOption: AxiosRequestConfig =
       await this.getDefaultReqConfig();
     try {
-      return await defaultApi.getInstances(args, reqConfigOption);
+      return await defaultApi.getInstances(
+        { paginationInfo, filters: filters },
+        reqConfigOption,
+      );
     } catch (err) {
       throw getError(err);
     }

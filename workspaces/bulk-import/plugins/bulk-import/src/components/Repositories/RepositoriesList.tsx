@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -23,8 +24,11 @@ import Box from '@mui/material/Box';
 import TablePagination from '@mui/material/TablePagination';
 
 import { useAddedRepositories } from '../../hooks/useAddedRepositories';
-import { AddRepositoryData, Order } from '../../types';
-import { getComparator } from '../../utils/repository-utils';
+import {
+  AddedRepositoryColumnNameEnum,
+  AddRepositoryData,
+  SortingOrderEnum,
+} from '../../types';
 import { RepositoriesHeader } from '../AddRepositories/RepositoriesHeader';
 import { AddedRepositoriesTableBody } from './AddedRepositoriesTableBody';
 import DeleteRepositoryDialog from './DeleteRepositoryDialog';
@@ -36,20 +40,33 @@ export const RepositoriesList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<string>();
+  const [order, setOrder] = React.useState<SortingOrderEnum>(
+    SortingOrderEnum.Asc,
+  );
+  const [orderBy, setOrderBy] = React.useState<string>('repoName');
   const { openDialog, setOpenDialog, deleteComponent } = useDeleteDialog();
   const { openDrawer, setOpenDrawer, drawerData } = useDrawer();
   const [pageNumber, setPageNumber] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [debouncedSearch, setDebouncedSearch] = React.useState('');
 
+  const orderByColumn = React.useMemo(() => {
+    return orderBy?.replace(/\.([a-zA-Z])/g, (_, char) =>
+      char.toUpperCase('en-US'),
+    ) as keyof typeof AddedRepositoryColumnNameEnum;
+  }, [orderBy]);
   const {
     data: importJobs,
     error: errJobs,
     loading,
     refetch,
-  } = useAddedRepositories(pageNumber + 1, rowsPerPage, debouncedSearch);
+  } = useAddedRepositories(
+    pageNumber + 1,
+    rowsPerPage,
+    debouncedSearch,
+    AddedRepositoryColumnNameEnum[orderByColumn],
+    order,
+  );
 
   const closeDialog = () => {
     setOpenDialog(false);
@@ -71,19 +88,13 @@ export const RepositoriesList = () => {
     property: string,
   ) => {
     const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    setOrder(isAsc ? SortingOrderEnum.Desc : SortingOrderEnum.Asc);
     setOrderBy(property);
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     pageNumber > 0 ? Math.max(0, rowsPerPage - importJobs.totalJobs) : 0;
-
-  const sortedData = React.useMemo(() => {
-    return [...(importJobs.addedRepositories || [])]?.sort(
-      getComparator(order, orderBy as string),
-    );
-  }, [importJobs.addedRepositories, order, orderBy]);
 
   const handleSearch = (str: string) => {
     setDebouncedSearch(str);
@@ -115,7 +126,7 @@ export const RepositoriesList = () => {
             <AddedRepositoriesTableBody
               error={errJobs}
               loading={loading}
-              rows={sortedData}
+              rows={importJobs.addedRepositories || []}
               emptyRows={emptyRows}
             />
           ),

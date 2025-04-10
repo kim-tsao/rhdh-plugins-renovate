@@ -1,5 +1,122 @@
 ### Dependencies
 
+## 2.6.3
+
+### Patch Changes
+
+- c64c3a5: fix view variables screen
+- 28c900b: fixing responsiveness of the WorkflowPage
+- Updated dependencies [691fd23]
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-common@1.26.2
+
+## 2.6.2
+
+### Patch Changes
+
+- 78411e8: fix compile issue
+- ec0400b: Disable abort when workflow execution does not exist
+- 4b77c55: If a workflow is Completed but the DataIndex reports an error message anyway, the message is rendered as a warning to reduce user's confusion.
+- 3422e48: Add LoginAsAdmin readme file
+- 6ae40d9: implement filters
+- Updated dependencies [29cf5fb]
+- Updated dependencies [754a051]
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-common@1.26.1
+
+## 2.6.1
+
+### Patch Changes
+
+- 4f0a326: [rc9] MTA displays two statuses in results when failing with error
+- 7032c17: Update the workflow details screen to match the latest Figma design
+- dcfe477: [UI] Empty values section in Results pane should not be rendered
+
+## 2.6.0
+
+### Minor Changes
+
+- 541d33d: Rearranging Workflow instance page to unify formatting and better visibility of results.
+
+### Patch Changes
+
+- 00f0cea: Improve abort
+- cda86f1: improve details in workflow instance page details card
+- bff51b6: Update Orchestrator icon - plugin
+- 1e498d8: improve results card in workflow instance page
+- 868b6d8: add "view variables" dialog
+- fb5aafd: Standardise the page loading animation
+- Updated dependencies [967c377]
+- Updated dependencies [05a1ce0]
+- Updated dependencies [816d8bc]
+- Updated dependencies [c7de094]
+- Updated dependencies [bee24dc]
+- Updated dependencies [d4fa6bf]
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-common@1.26.0
+
+## 2.5.1
+
+### Patch Changes
+
+- a75cfff: improve workflow details card in workflow page
+- 6a777cc: workflow name column values in workflow runs table should be a link to workflow page
+- d8c6ed0: update workflow instance page
+- d33a96e: Workflow progress panel should have a scroll
+- cea6963: workflow runs list view - rename name column
+- be7b8c9: "Add runs button"
+- d59e940: Updated dependency `@openapitools/openapi-generator-cli` to `2.15.3`.
+  Updated dependency `prettier` to `3.4.2`.
+  Updated dependency `@janus-idp/cli` to `1.19.1`.
+  Updated dependency `monaco-editor` to `0.52.2`.
+  Updated dependency `monaco-yaml` to `5.2.3`.
+  Updated dependency `sass` to `1.83.0`.
+  Updated dependency `webpack` to `5.97.1`.
+- cf1c024: bug fix in workflow runs table status filter
+- 71fd546: Implement inputs card in workflow instance page
+- 1d1d8cf: hide abort button when disabled
+- 353e038: Workflows Table - rename tooltip "Run” instead of “Execute.”
+- f3ace9e: add workflow tabs - details and runs
+- Updated dependencies [d59e940]
+- Updated dependencies [d6e5b1a]
+- Updated dependencies [9cc8c89]
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-common@1.25.1
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-form-api@1.4.3
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-form-react@1.4.6
+
+## 2.5.0
+
+### Minor Changes
+
+- 5ab913b: Access can now be managed on a per-workflow basis.
+
+### Patch Changes
+
+- Updated dependencies [5b90f96]
+- Updated dependencies [5ab913b]
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-common@1.25.0
+
+## 2.4.3
+
+### Patch Changes
+
+- f5bcd52: remove average duration from workflow table and overview page
+- 6a71932: added export-dynamic scripts
+- Updated dependencies [b6cf167]
+- Updated dependencies [1d4cfa1]
+- Updated dependencies [35bb667]
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-common@1.24.3
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-form-react@1.4.5
+
+## 2.4.2
+
+### Patch Changes
+
+- 8f32f1c: Configuration and documentation added to ease development setup
+- bab8daa: The parent assessment link is shown again thanks to fixing passing of the businessKey when "execute" action is trigerred.
+- Updated dependencies [9f61eb0]
+- Updated dependencies [c301dbd]
+- Updated dependencies [bab8daa]
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-common@1.24.2
+  - @red-hat-developer-hub/backstage-plugin-orchestrator-form-react@1.4.4
+
 ## 2.4.1
 
 ### Patch Changes

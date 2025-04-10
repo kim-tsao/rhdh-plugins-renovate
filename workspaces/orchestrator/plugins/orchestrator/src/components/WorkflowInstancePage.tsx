@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -26,15 +27,31 @@ import {
   useRouteRef,
   useRouteRefParams,
 } from '@backstage/core-plugin-api';
-import { usePermission } from '@backstage/plugin-permission-react';
 
-import { Button, Grid, Tooltip } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+import Snackbar from '@material-ui/core/Snackbar';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
+import ErrorIcon from '@material-ui/icons/Error';
+import { AlertTitle } from '@material-ui/lab';
+import Alert from '@material-ui/lab/Alert';
+
+// FLPATH-2135
+// import StartIcon from '@mui/icons-material/Start';
+// import SwipeRightAltOutlinedIcon from '@mui/icons-material/SwipeRightAltOutlined';
 
 import {
   AssessedProcessInstanceDTO,
-  orchestratorWorkflowExecutePermission,
-  orchestratorWorkflowInstanceAbortPermission,
+  orchestratorWorkflowUsePermission,
+  orchestratorWorkflowUseSpecificPermission,
   ProcessInstanceStatusDTO,
   QUERY_PARAM_ASSESSMENT_INSTANCE_ID,
   QUERY_PARAM_INSTANCE_ID,
@@ -42,6 +59,7 @@ import {
 
 import { orchestratorApiRef } from '../api';
 import { SHORT_REFRESH_INTERVAL } from '../constants';
+import { usePermissionArrayDecision } from '../hooks/usePermissionArray';
 import usePolling from '../hooks/usePolling';
 import { executeWorkflowRouteRef, workflowInstanceRouteRef } from '../routes';
 import { isNonNullable } from '../utils/TypeGuards';
@@ -53,11 +71,18 @@ import { WorkflowInstancePageContent } from './WorkflowInstancePageContent';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     abortButton: {
-      backgroundColor: theme.palette.error.main,
-      color: theme.palette.getContrastText(theme.palette.error.main),
+      backgroundColor: theme.palette.error.dark,
+      color: theme.palette.getContrastText(theme.palette.error.dark),
       '&:hover': {
         backgroundColor: theme.palette.error.dark,
+        filter: 'brightness(90%)',
       },
+    },
+    modalText: {
+      marginBottom: theme.spacing(2),
+    },
+    errorColor: {
+      color: theme.palette.error.dark,
     },
   }),
 );
@@ -65,49 +90,70 @@ const useStyles = makeStyles((theme: Theme) =>
 export type AbortConfirmationDialogActionsProps = {
   handleSubmit: () => void;
   handleCancel: () => void;
+  isAborting: boolean;
+  canAbort: boolean;
 };
 
-export type AbortAlertDialogActionsProps = {
-  handleClose: () => void;
+const AbortConfirmationDialogContent = ({
+  canAbort,
+}: {
+  canAbort: boolean;
+}) => {
+  const classes = useStyles();
+  return (
+    <div>
+      <Box className={classes.modalText}>
+        <Typography variant="h6">
+          Are you sure you want to abort this workflow run? <br /> <br />
+          Aborting will stop all in-progress and pending steps immediately. Any
+          incomplete tasks will not be saved.
+        </Typography>
+      </Box>
+      {!canAbort && (
+        <Box sx={{ width: '100%' }}>
+          <Alert severity="info">
+            <AlertTitle>Run completed</AlertTitle>
+            It is not possible to abort the run as it has already been
+            completed.
+          </Alert>
+        </Box>
+      )}
+    </div>
+  );
 };
-
-export type AbortAlertDialogContentProps = {
-  message: string;
-};
-
-const AbortConfirmationDialogContent = () => (
-  <div>Are you sure you want to abort this workflow instance?</div>
-);
-
-const AbortAlertDialogContent = (props: AbortAlertDialogContentProps) => (
-  <div>
-    The abort operation failed with the following error: {props.message}
-  </div>
-);
 
 const AbortConfirmationDialogActions = (
   props: AbortConfirmationDialogActionsProps,
-) => (
-  <>
-    <Button onClick={props.handleCancel}>Cancel</Button>
-    <Button onClick={props.handleSubmit} color="primary">
-      Ok
-    </Button>
-  </>
-);
-
-const AbortAlertDialogActions = (props: AbortAlertDialogActionsProps) => (
-  <Button onClick={props.handleClose} color="primary">
-    OK
-  </Button>
-);
+) => {
+  const classes = useStyles();
+  return (
+    <>
+      <Button
+        onClick={props.handleSubmit}
+        variant="contained"
+        className={classes.abortButton}
+        startIcon={props.isAborting ? <CircularProgress size="1rem" /> : null}
+        disabled={props.isAborting || !props.canAbort}
+      >
+        Abort
+      </Button>
+      <Button
+        onClick={props.handleCancel}
+        variant="outlined"
+        color="primary"
+        disabled={props.isAborting}
+      >
+        Cancel
+      </Button>
+    </>
+  );
+};
 
 export const WorkflowInstancePage = ({
   instanceId,
 }: {
   instanceId?: string;
 }) => {
-  const classes = useStyles();
   const navigate = useNavigate();
   const orchestratorApi = useApi(orchestratorApiRef);
   const executeWorkflowLink = useRouteRef(executeWorkflowRouteRef);
@@ -116,16 +162,22 @@ export const WorkflowInstancePage = ({
   );
   const [isAbortConfirmationDialogOpen, setIsAbortConfirmationDialogOpen] =
     useState(false);
-  const [isAbortAlertDialogOpen, setIsAbortAlertDialogOpen] = useState(false);
-  const [abortWorkflowInstanceErrorMsg, setAbortWorkflowInstanceErrorMsg] =
-    useState('');
-  const permittedToExecute = usePermission({
-    permission: orchestratorWorkflowExecutePermission,
-  });
 
-  const permittedToAbort = usePermission({
-    permission: orchestratorWorkflowInstanceAbortPermission,
-  });
+  const [isAborting, setIsAborting] = React.useState(false);
+  const [isAbortSnackbarOpen, setIsAbortSnackbarOpen] = React.useState(false);
+  const [abortError, setAbortError] = React.useState('');
+
+  const [isRetrigger, setIsRetrigger] = React.useState(false);
+  const [isRetriggerSnackbarOpen, setIsRerunSnackbarOpen] =
+    React.useState(false);
+  const [retriggerError, setRetriggerError] = React.useState('');
+
+  const handleAbortBarClose = () => {
+    setIsAbortSnackbarOpen(false);
+  };
+  const handleRerunBarClose = () => {
+    setIsRerunSnackbarOpen(false);
+  };
 
   const fetchInstance = React.useCallback(async () => {
     if (!instanceId && !queryInstanceId) {
@@ -145,40 +197,50 @@ export const WorkflowInstancePage = ({
     SHORT_REFRESH_INTERVAL,
     (curValue: AssessedProcessInstanceDTO | undefined) =>
       !!curValue &&
-      (curValue.instance.status === 'Active' ||
-        curValue.instance.status === 'Pending' ||
-        !curValue.instance.status),
+      (curValue.instance.state === ProcessInstanceStatusDTO.Active ||
+        curValue.instance.state === ProcessInstanceStatusDTO.Pending ||
+        !curValue.instance.state),
+  );
+
+  const workflowId = value?.instance?.processId;
+  const permittedToUse = usePermissionArrayDecision(
+    workflowId
+      ? [
+          orchestratorWorkflowUsePermission,
+          orchestratorWorkflowUseSpecificPermission(workflowId),
+        ]
+      : [orchestratorWorkflowUsePermission],
   );
 
   const canAbort =
-    value?.instance.status === ProcessInstanceStatusDTO.Active ||
-    value?.instance.status === ProcessInstanceStatusDTO.Error;
+    value?.instance.state === ProcessInstanceStatusDTO.Active ||
+    value?.instance.state === ProcessInstanceStatusDTO.Error;
 
   const canRerun =
-    value?.instance.status === ProcessInstanceStatusDTO.Completed ||
-    value?.instance.status === ProcessInstanceStatusDTO.Aborted ||
-    value?.instance.status === ProcessInstanceStatusDTO.Error;
+    value?.instance.state === ProcessInstanceStatusDTO.Completed ||
+    value?.instance.state === ProcessInstanceStatusDTO.Aborted ||
+    value?.instance.state === ProcessInstanceStatusDTO.Error;
 
-  const toggleAbortConfirmationDialog = () => {
-    setIsAbortConfirmationDialogOpen(!isAbortConfirmationDialogOpen);
-  };
-
-  const toggleAbortAlertDialog = () => {
-    setIsAbortAlertDialogOpen(!isAbortAlertDialogOpen);
-  };
+  const toggleAbortConfirmationDialog = React.useCallback(() => {
+    setIsAbortConfirmationDialogOpen(prev => !prev);
+  }, []);
 
   const handleAbort = React.useCallback(async () => {
     if (value) {
+      setIsAborting(true);
+
       try {
         await orchestratorApi.abortWorkflowInstance(value.instance.id);
         restart();
       } catch (e) {
-        setAbortWorkflowInstanceErrorMsg(`${(e as Error).message}`);
-        setIsAbortAlertDialogOpen(true);
+        setAbortError(`Abort failed: ${(e as Error).message}`);
+        setIsAbortSnackbarOpen(true);
+      } finally {
+        setIsAborting(false);
+        toggleAbortConfirmationDialog();
       }
-      setIsAbortConfirmationDialogOpen(false);
     }
-  }, [orchestratorApi, restart, value]);
+  }, [orchestratorApi, restart, value, toggleAbortConfirmationDialog]);
 
   const handleRerun = React.useCallback(() => {
     if (!value) {
@@ -195,10 +257,55 @@ export const WorkflowInstancePage = ({
     navigate(urlToNavigate);
   }, [value, navigate, executeWorkflowLink]);
 
+  const handleRetrigger = async () => {
+    if (value) {
+      setIsRetrigger(true);
+      try {
+        await orchestratorApi.retriggerInstance(
+          value.instance.processId,
+          value.instance.id,
+        );
+        restart();
+      } catch (retriggerInstanceError) {
+        if (retriggerInstanceError.toString().includes('Failed Node Id')) {
+          setRetriggerError(`Run failed again`);
+        } else setRetriggerError(`Couldn't initiate the run`);
+        setIsRerunSnackbarOpen(true);
+      } finally {
+        setIsRetrigger(false);
+      }
+    }
+  };
+
+  const anchorRef = useRef(null);
+  const [openRerunMenu, setOpenRerunMenu] = useState(false);
+
+  const handleClick = () => {
+    setOpenRerunMenu(prev => !prev);
+  };
+
+  const handleCloseMenu = () => {
+    setOpenRerunMenu(false);
+  };
+
+  const handleOptionClick = (option: 'retrigger' | 'rerun') => {
+    handleCloseMenu();
+    if (option === 'rerun') handleRerun();
+    else if (option === 'retrigger') handleRetrigger();
+  };
+
+  // For making the linter happy - FLPATH-2135:
+  // No-op statements to be removed when the feature is re-enabled.
+  handleOptionClick; // eslint-disable-line
+  openRerunMenu; // eslint-disable-line
+  handleClick; // eslint-disable-line
+
+  const classes = useStyles();
+
   return (
     <BaseOrchestratorPage
-      title={value?.instance.processId ?? value?.instance.id ?? instanceId}
-      type="Workflow runs"
+      title={value?.instance.id}
+      type="All runs"
       typeLink="/orchestrator/instances"
     >
       {loading ? <Progress /> : null}
@@ -207,64 +314,151 @@ export const WorkflowInstancePage = ({
         <>
           <ContentHeader title="">
             <InfoDialog
-              title="Abort workflow"
+              title="Abort workflow run?"
+              titleIcon={<ErrorIcon className={classes.errorColor} />}
               onClose={toggleAbortConfirmationDialog}
               open={isAbortConfirmationDialogOpen}
               dialogActions={
                 <AbortConfirmationDialogActions
                   handleCancel={toggleAbortConfirmationDialog}
                   handleSubmit={handleAbort}
+                  isAborting={isAborting}
+                  canAbort={canAbort}
                 />
               }
-              children={<AbortConfirmationDialogContent />}
-            />
-            <InfoDialog
-              title="Abort workflow failed"
-              onClose={toggleAbortAlertDialog}
-              open={isAbortAlertDialogOpen}
-              dialogActions={
-                <AbortAlertDialogActions handleClose={toggleAbortAlertDialog} />
-              }
-              children={
-                <AbortAlertDialogContent
-                  message={abortWorkflowInstanceErrorMsg}
-                />
-              }
+              children={<AbortConfirmationDialogContent canAbort={canAbort} />}
             />
             <Grid container item justifyContent="flex-end" spacing={1}>
               <Grid item>
-                <Tooltip
-                  title="user not authorized to abort workflow"
-                  disableHoverListener={permittedToAbort.allowed}
-                >
-                  <Button
-                    variant="contained"
-                    disabled={!permittedToAbort.allowed || !canAbort}
-                    onClick={toggleAbortConfirmationDialog}
-                    className={classes.abortButton}
+                {canAbort && (
+                  <Tooltip
+                    title="user not authorized to abort workflow"
+                    disableHoverListener={permittedToUse.allowed}
                   >
-                    Abort
-                  </Button>
-                </Tooltip>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      disabled={!permittedToUse.allowed}
+                      onClick={toggleAbortConfirmationDialog}
+                    >
+                      Abort
+                    </Button>
+                  </Tooltip>
+                )}
               </Grid>
-
               <Grid item>
                 <Tooltip
                   title="user not authorized to execute workflow"
-                  disableHoverListener={permittedToExecute.allowed}
+                  disableHoverListener={permittedToUse.allowed}
                 >
                   <Button
+                    ref={anchorRef}
                     variant="contained"
                     color="primary"
-                    disabled={!permittedToExecute.allowed || !canRerun}
-                    onClick={handleRerun}
+                    startIcon={
+                      isRetrigger ? <CircularProgress size="1rem" /> : null
+                    }
+                    disabled={!permittedToUse.allowed || !canRerun}
+                    onClick={
+                      // Temporarily disable the "retrigger" as a workaround for FLPATH-2135.
+                      // We will re-enable once the SonataFlow fixes the feature
+                      handleRerun
+
+                      // value?.instance.state === ProcessInstanceStatusDTO.Error
+                      //   ? handleClick
+                      //   : handleRerun
+                    }
+                    // Commented-out for FLPATH-2135:
+                    // endIcon={
+                    //   value?.instance.state ===
+                    //     ProcessInstanceStatusDTO.Error ? (
+                    //     <ArrowDropDown />
+                    //   ) : null
+                    // }
+                    style={{ color: 'white' }}
                   >
-                    Rerun
+                    {value.instance.state ===
+                    ProcessInstanceStatusDTO.Active ? (
+                      <>
+                        <CircularProgress color="inherit" size="0.75rem" />
+                        &nbsp;Running...
+                      </>
+                    ) : (
+                      'Run again'
+                    )}
                   </Button>
                 </Tooltip>
+
+                {/*
+                Temporarily disable the "retrigger" as a workaround for FLPATH-2135.
+                <Menu
+                  anchorEl={anchorRef.current}
+                  open={openRerunMenu}
+                  onClose={handleCloseMenu}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                >
+                  <MenuItem onClick={() => handleOptionClick('rerun')}>
+                    <StartIcon />
+                    Entire workflow
+                  </MenuItem>
+                  <MenuItem onClick={() => handleOptionClick('retrigger')}>
+                    <SwipeRightAltOutlinedIcon />
+                    From failure point
+                  </MenuItem>
+                </Menu> */}
               </Grid>
             </Grid>
           </ContentHeader>
+          <Snackbar
+            open={isAbortSnackbarOpen}
+            onClose={handleAbortBarClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert
+              severity="error"
+              action={
+                <IconButton
+                  size="small"
+                  aria-label="close"
+                  color="inherit"
+                  onClick={handleAbortBarClose}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              }
+            >
+              {abortError}
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={isRetriggerSnackbarOpen}
+            onClose={handleRerunBarClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert
+              severity="error"
+              action={
+                <IconButton
+                  size="small"
+                  aria-label="close"
+                  color="inherit"
+                  onClick={handleRerunBarClose}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              }
+            >
+              {retriggerError}
+            </Alert>
+          </Snackbar>
           <WorkflowInstancePageContent assessedInstance={value} />
         </>
       ) : null}

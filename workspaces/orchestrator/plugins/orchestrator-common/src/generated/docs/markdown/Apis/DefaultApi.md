@@ -46,7 +46,7 @@ No authorization required
 
 <a name="executeWorkflow"></a>
 # **executeWorkflow**
-> ExecuteWorkflowResponseDTO executeWorkflow(workflowId, ExecuteWorkflowRequestDTO)
+> ExecuteWorkflowResponseDTO executeWorkflow(workflowId, ExecuteWorkflowRequestDTO, businessKey)
 
 Execute a workflow
 
@@ -58,6 +58,7 @@ Execute a workflow
 |------------- | ------------- | ------------- | -------------|
 | **workflowId** | **String**| ID of the workflow to execute | [default to null] |
 | **ExecuteWorkflowRequestDTO** | [**ExecuteWorkflowRequestDTO**](../Models/ExecuteWorkflowRequestDTO.md)|  | |
+| **businessKey** | **String**| ID of the parent workflow | [optional] [default to null] |
 
 ### Return type
 
@@ -102,7 +103,7 @@ No authorization required
 
 <a name="getInstances"></a>
 # **getInstances**
-> ProcessInstanceListResultDTO getInstances(GetInstancesRequest)
+> ProcessInstanceListResultDTO getInstances(SearchRequest)
 
 Get instances
 
@@ -112,7 +113,7 @@ Get instances
 
 |Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **GetInstancesRequest** | [**GetInstancesRequest**](../Models/GetInstancesRequest.md)| Parameters for retrieving instances | [optional] |
+| **SearchRequest** | [**SearchRequest**](../Models/SearchRequest.md)| Parameters for retrieving instances | [optional] |
 
 ### Return type
 

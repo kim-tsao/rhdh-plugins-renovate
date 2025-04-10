@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import type { LoggerService } from '@backstage/backend-plugin-api';
 import type { Config } from '@backstage/config';
 
@@ -33,6 +34,7 @@ import { executeWithRetry } from './Helper';
 
 const SONATA_FLOW_RESOURCES_PATH =
   '/home/kogito/serverless-workflow-project/src/main/resources';
+const DEFAULT_SONATAFLOW_RUNTIME = 'docker';
 
 interface LauncherCommand {
   command: string;
@@ -44,8 +46,11 @@ interface DevModeConnectionConfig {
   port?: number;
   containerImage: string;
   resourcesPath: string;
-  persistencePath: string;
+  persistencePath?: string;
   repoUrl?: string;
+  notificationsBearerToken?: string;
+  notificationsUrl?: string;
+  runtime: string;
 }
 
 export class DevModeService {
@@ -137,9 +142,13 @@ export class DevModeService {
       'run',
       '--name',
       'backstage-internal-sonataflow',
-      '--add-host',
-      'host.docker.internal:host-gateway',
+      ...(this.connection.runtime === 'podman'
+        ? ['--replace']
+        : ['--add-host', 'host.docker.internal:host-gateway']),
     ];
+
+    // TODO: pass automatically a set of env variables from configuration, i.e. all config props with names starting at ENV_:
+    //   config: orchestrator.sonataFlowService.ENV_foo
 
     launcherArgs.push('-e', `QUARKUS_HTTP_PORT=${this.connection.port}`);
 
@@ -149,16 +158,38 @@ export class DevModeService {
       '-v',
       `${resourcesAbsPath}:${SONATA_FLOW_RESOURCES_PATH}:Z`,
     );
+    if (this.connection?.persistencePath) {
+      // if persistence is enabled, mount the volume and persist data across restarts
+      const persistenceAbsPath = resolve(this.connection.persistencePath);
+      this.logger.info(
+        `Persistence is enabled, mounting ${persistenceAbsPath} as volume to persist data`,
+      );
+      if (!fs.existsSync(persistenceAbsPath)) {
+        fs.mkdirSync(persistenceAbsPath, { recursive: true });
+      }
+      launcherArgs.push(
+        '-v',
+        `${persistenceAbsPath}:${DEFAULT_SONATAFLOW_PERSISTENCE_PATH}:Z`,
+      );
+    }
     launcherArgs.push('-e', 'KOGITO.CODEGEN.PROCESS.FAILONERROR=false');
     launcherArgs.push(
       '-e',
-      `QUARKUS_EMBEDDED_POSTGRESQL_DATA_DIR=${this.connection.persistencePath}`,
+      `QUARKUS_EMBEDDED_POSTGRESQL_DATA_DIR=${DEFAULT_SONATAFLOW_PERSISTENCE_PATH}`,
+    );
+    launcherArgs.push(
+      '-e',
+      `NOTIFICATIONS_BEARER_TOKEN=${this.connection.notificationsBearerToken}`,
+    );
+    launcherArgs.push(
+      '-e',
+      `BACKSTAGE_NOTIFICATIONS_URL=${this.connection.notificationsUrl}`,
     );
 
     launcherArgs.push(this.connection.containerImage);
 
     return {
-      command: 'docker',
+      command: this.connection.runtime,
       args: launcherArgs,
     };
   }
@@ -183,27 +214,44 @@ export class DevModeService {
     const persistencePath =
       config.getOptionalString(
         'orchestrator.sonataFlowService.persistence.path',
-      ) ?? DEFAULT_SONATAFLOW_PERSISTENCE_PATH;
+      ) ?? '';
 
     const repoUrl =
       config.getOptionalString(
         'orchestrator.sonataFlowService.workflowsSource.gitRepositoryUrl',
       ) ?? '';
 
+    const notificationsBearerToken =
+      config.getOptionalString(
+        'orchestrator.sonataFlowService.notificationsBearerToken',
+      ) ?? '';
+
+    const notificationsUrl =
+      config.getOptionalString(
+        'orchestrator.sonataFlowService.notificationsUrl',
+      ) ?? '';
+
+    const runtime =
+      config.getOptionalString('orchestrator.sonataFlowService.runtime') ??
+      DEFAULT_SONATAFLOW_RUNTIME;
+
     return {
+      runtime,
       host,
       port,
       containerImage,
       resourcesPath,
       persistencePath,
       repoUrl,
+      notificationsBearerToken,
+      notificationsUrl,
     };
   }
 
   public async loadDevWorkflows() {
-    if (!this.connection.repoUrl) {
+    if (!this.connection?.repoUrl || !this.connection?.resourcesPath) {
       this.logger.info(
-        'No Git repository configured. Skipping dev workflows loading.',
+        'No Git repository or path configured. Skipping dev workflows loading.',
       );
       return;
     }
@@ -216,5 +264,7 @@ export class DevModeService {
     }
 
     await this.gitService.clone(this.connection.repoUrl, localPath);
+    // Remove .git to avoid any submodule issues
+    await fs.rm(join(localPath, '.git'), { recursive: true, force: true });
   }
 }

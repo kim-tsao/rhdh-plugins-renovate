@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { useAsync } from 'react-use';
 
@@ -27,9 +28,11 @@ import { useFormikContext } from 'formik';
 
 import { bulkImportApiRef } from '../api/BulkImportBackendClient';
 import {
+  AddedRepositoryColumnNameEnum,
   AddRepositoriesFormValues,
   AddRepositoryData,
   ImportJobs,
+  SortingOrderEnum,
 } from '../types';
 import { prepareDataForAddedRepositories } from '../utils/repository-utils';
 
@@ -37,6 +40,8 @@ export const useAddedRepositories = (
   pageNumber: number,
   rowsPerPage: number,
   searchString: string,
+  sortColumn: AddedRepositoryColumnNameEnum,
+  sortOrder: SortingOrderEnum,
   pollInterval?: number,
 ): {
   data: {
@@ -63,7 +68,10 @@ export const useAddedRepositories = (
     page: number,
     size: number,
     searchStr: string,
-  ) => await bulkImportApi.getImportJobs(page, size, searchStr);
+    sortCol: AddedRepositoryColumnNameEnum,
+    sortOrd: SortingOrderEnum,
+  ) =>
+    await bulkImportApi.getImportJobs(page, size, searchStr, sortCol, sortOrd);
 
   const {
     data: value,
@@ -71,9 +79,23 @@ export const useAddedRepositories = (
     isLoading: isLoadingTable,
     refetch,
   } = useQuery(
-    ['importJobs', pageNumber, rowsPerPage, searchString],
-    () => fetchAddedRepositories(pageNumber, rowsPerPage, searchString),
-    { refetchInterval: pollInterval || 60000 },
+    [
+      'importJobs',
+      pageNumber,
+      rowsPerPage,
+      searchString,
+      sortColumn,
+      sortOrder,
+    ],
+    () =>
+      fetchAddedRepositories(
+        pageNumber,
+        rowsPerPage,
+        searchString,
+        sortColumn,
+        sortOrder,
+      ),
+    { refetchInterval: pollInterval || 60000, refetchOnWindowFocus: false },
   );
 
   const prepareData = React.useMemo(() => {

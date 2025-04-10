@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { forwardRef, ForwardRefRenderFunction } from 'react';
 
 import {
@@ -28,20 +29,34 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 
 export type InfoDialogProps = {
-  title: string;
+  title: React.ReactNode;
+  titleIcon?: React.ReactNode;
   open: boolean;
   onClose?: () => void;
   dialogActions?: React.ReactNode;
   children?: React.ReactNode;
+  wideDialog?: boolean;
 };
 
 export type ParentComponentRef = HTMLElement;
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles(theme => ({
   closeBtn: {
     position: 'absolute',
-    right: 8,
-    top: 8,
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
+  dialogActions: {
+    justifyContent: 'flex-start',
+    paddingLeft: theme.spacing(3),
+    paddingBottom: theme.spacing(2),
+  },
+  titleContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  titleIcon: {
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -49,14 +64,33 @@ export const RefForwardingInfoDialog: ForwardRefRenderFunction<
   ParentComponentRef,
   InfoDialogProps
 > = (props, forwardedRef): JSX.Element | null => {
-  const { title, open = false, onClose, children, dialogActions } = props;
+  const {
+    title,
+    titleIcon,
+    open = false,
+    onClose,
+    children,
+    dialogActions,
+    wideDialog,
+  } = props;
   const classes = useStyles();
 
   return (
-    <Dialog onClose={_ => onClose} open={open} ref={forwardedRef}>
+    <Dialog
+      onClose={_ => onClose}
+      open={open}
+      ref={forwardedRef}
+      maxWidth={wideDialog ? 'xl' : 'sm'}
+      PaperProps={{
+        style: { minWidth: wideDialog ? 500 : 400 },
+      }}
+    >
       <DialogTitle>
-        <Box>
-          <Typography variant="h5">{title}</Typography>
+        <Box className={classes.titleContainer}>
+          {titleIcon && <Box className={classes.titleIcon}>{titleIcon}</Box>}
+          <Typography variant="h4">
+            <b>{title}</b>
+          </Typography>
           <IconButton
             className={classes.closeBtn}
             aria-label="close"
@@ -69,7 +103,9 @@ export const RefForwardingInfoDialog: ForwardRefRenderFunction<
       <DialogContent>
         <Box>{children}</Box>
       </DialogContent>
-      <DialogActions>{dialogActions}</DialogActions>
+      <DialogActions className={classes.dialogActions}>
+        {dialogActions}
+      </DialogActions>
     </Dialog>
   );
 };

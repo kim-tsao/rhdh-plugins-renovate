@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Backstage Authors
+ * Copyright Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import * as React from 'react';
 
 import Alert from '@mui/material/Alert';
@@ -34,6 +35,7 @@ import {
   evaluateRowForOrg,
   evaluateRowForRepo,
   filterSelectedForActiveDrawer,
+  filterSelectedRepositoriesOnActivePage,
   getComparator,
   updateWithNewSelectedRepositories,
 } from '../../utils/repository-utils';
@@ -250,7 +252,10 @@ export const RepositoriesTable = ({
     () => filterSelectedForActiveDrawer(tableData || [], selected),
     [tableData, selected],
   );
-
+  const selectedRepositoriesOnActivePage = React.useMemo(
+    () => filterSelectedRepositoriesOnActivePage(filteredData, selected),
+    [filteredData, selected],
+  );
   const getRowCount = () => {
     if (drawerOrganization) {
       return tableData?.filter(
@@ -296,7 +301,7 @@ export const RepositoriesTable = ({
             numSelected={
               drawerOrganization
                 ? Object.keys(selectedForActiveDrawer).length
-                : Object.keys(selected).length
+                : selectedRepositoriesOnActivePage.length
             }
             isDataLoading={loading}
             order={order}
@@ -319,30 +324,30 @@ export const RepositoriesTable = ({
             showOrganizations={showOrganizations}
           />
         </Table>
+        {!isOpen && tableData?.length > 0 && (
+          <TablePagination
+            style={{ height: '30%' }}
+            rowsPerPageOptions={[
+              { value: 5, label: '5 rows' },
+              { value: 10, label: '10 rows' },
+              { value: 20, label: '20 rows' },
+              { value: 50, label: '50 rows' },
+              { value: 100, label: '100 rows' },
+            ]}
+            component="div"
+            count={
+              (showOrganizations
+                ? data?.totalOrganizations
+                : data?.totalRepositories) || 0
+            }
+            rowsPerPage={rowsPerPage}
+            page={effectivePage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={null}
+          />
+        )}
       </TableContainer>
-      {!isOpen && tableData?.length > 0 && (
-        <TablePagination
-          style={{ height: '30%' }}
-          rowsPerPageOptions={[
-            { value: 5, label: '5 rows' },
-            { value: 10, label: '10 rows' },
-            { value: 20, label: '20 rows' },
-            { value: 50, label: '50 rows' },
-            { value: 100, label: '100 rows' },
-          ]}
-          component="div"
-          count={
-            (showOrganizations
-              ? data?.totalOrganizations
-              : data?.totalRepositories) || 0
-          }
-          rowsPerPage={rowsPerPage}
-          page={effectivePage}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage={null}
-        />
-      )}
       {showOrganizations && activeOrganization && (
         <AddRepositoriesDrawer
           title="Selected repositories"
