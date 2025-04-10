@@ -1,0 +1,6 @@
+playwright.config.ts
+dist-dynamic
+dist-scalprum
+!.eslintrc.js
+!.prettierrc.js
+coverage

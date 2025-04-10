@@ -1,0 +1,8 @@
+dist
+dist-types
+coverage
+.vscode
+.eslintrc.js
+report.api.md
+knip-report.md
+

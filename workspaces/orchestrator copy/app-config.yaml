@@ -1,0 +1,149 @@
+app:
+  title: RHDH Plugins
+  baseUrl: http://localhost:3000
+
+organization:
+  name: Red Hat
+
+backend:
+  baseUrl: http://localhost:7007
+  auth:
+    externalAccess:
+      - type: static
+        options:
+          # notsecret
+          # echo mycurlpasswd | base64
+          token: bXljdXJscGFzc3dkCg==
+          subject: my-external-feed
+  listen:
+    port: 7007
+    # Uncomment the following host directive to bind to specific interfaces
+    # host: 127.0.0.1
+
+    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  # This is for local development only, it is not recommended to use this in production
+  # The production database configuration is stored in app-config.production.yaml
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+  cache:
+    store: memory
+  # useful for debugging APIs via curl in dev env without requiring a auth:
+  # auth:
+  #   dangerouslyDisableDefaultAuthPolicy: true
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+
+integrations: {}
+#integrations:
+#  github:
+#    - host: github.com
+#      token: ${GITHUB_TOKEN}
+#  gitlab:
+#    - host: gitlab.com
+#      token: ${GITLAB_TOKEN}
+
+proxy:
+  '/quay/api':
+    target: 'https://quay.io'
+    headers:
+      X-Requested-With: 'XMLHttpRequest'
+      # Uncomment the following line to access a private Quay Repository using a token
+      # Authorization: 'Bearer <YOUR TOKEN>'
+    changeOrigin: true
+    # Change to "false" in case of using self hosted quay instance with a self-signed certificate
+    secure: true
+
+quay:
+  uiUrl: 'https://quay.io'
+
+techdocs:
+  builder: 'local' # Alternatives - 'external'
+  generator:
+    runIn: 'docker' # Alternatives - 'local'
+  publisher:
+    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+
+auth:
+  # see https://backstage.io/docs/auth/ to learn about auth providers
+  environment: development
+  providers:
+    guest: {}
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: emailMatchingUserEntityProfileEmail
+
+# permission:
+#   enabled: true
+#   rbac:
+#     policies-csv-file: ../../docs/rbac-policy.csv
+#     policyFileReload: true
+#     pluginsWithPermission:
+#       - orchestrator
+#     admin:
+#       users:
+#         - name: user:default/mareklibra
+
+scaffolder:
+  {}
+  # see https://backstage.io/docs/features/software-templates/configuration for software template options
+
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, Group, Resource, Location, Template, API]
+  locations:
+    - type: url
+      target: https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml
+
+    - type: url
+      target: https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/templates.yaml
+
+    - type: file
+      target: ../../entities/users.yaml
+      rules:
+        - allow: [User]
+
+    - type: file
+      target: ../../entities/templates.yaml
+
+    # - type: url
+    #   target: https://github.com/mareklibra/generated-workflow-templates/blob/main/templates.yaml
+
+dynamicPlugins:
+  frontend: {}
+orchestrator:
+  sonataFlowService:
+    # uncomment the next line to use podman instead of docker
+    # runtime: podman
+    baseUrl: http://localhost
+    port: 8899
+    autoStart: true
+    # If you're using a MacBook with M-series chips, uncomment the line below to use ARM images.
+    # To pull the image, you'll first need to authenticate with the registry.
+    # For more information, visit: https://red.ht/410mMNU.
+    # container:  registry.redhat.io/openshift-serverless-1/logic-swf-devmode-rhel8:1.35.0
+    # notsecret
+    notificationsBearerToken: bXljdXJscGFzc3dkCg==
+    notificationsUrl: http://host.docker.internal:7007
+    # uncomment the next line if you are using podman:
+    # notificationsUrl: http://host.containers.internal:7007
+    # By default the Dev Mode workflows are Ephemeral. If you want to persist the data across restarts,
+    # uncomment the next two lines, read more: https://www.rhdhorchestrator.io/blog/devmode-vs-prodmode/
+    # persistence:
+    #  path: ./.devModeTemp/db_persistence # this will be under packages/backend
+    workflowsSource:
+      gitRepositoryUrl: https://github.com/rhdhorchestrator/backstage-orchestrator-workflows.git
+      localPath: ./.devModeTemp/repository # this will be under packages/backend
+  dataIndexService:
+    url: http://localhost:8899

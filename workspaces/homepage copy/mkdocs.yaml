@@ -1,0 +1,26 @@
+site_name: RHDH Home Page plugin
+
+plugins:
+  - techdocs-core
+
+nav:
+  - About: index.md
+  - Customization:
+      - Defaults: defaults.md
+      - Header: header.md
+      - Layout options: layout-options.md
+  - User Customization: user-customization.md
+  - Included cards:
+      - Search: cards/search.md
+      - Quick access: cards/quick-access.md
+      - Headline: cards/headline.md
+      - Markdown: cards/markdown.md
+      - Placeholder: cards/placeholder.md
+      - Catalog starred entities: cards/catalog-starred.md
+      - Recently visited: cards/recently-visited.md
+      - Top visited: cards/top-visited.md
+      - Featured docs: cards/featured-docs.md
+      - Jokes: cards/jokes.md
+      - World clock: cards/worldclock.md
+  - Extend with plugins:
+      - Create a new card: create-a-new-card.md

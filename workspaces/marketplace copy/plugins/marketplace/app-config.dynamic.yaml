@@ -1,0 +1,15 @@
+dynamicPlugins:
+  frontend:
+    red-hat-developer-hub.backstage-plugin-marketplace:
+      appIcons:
+        - name: marketplace
+          importName: MarketplaceIcon
+      dynamicRoutes:
+        - path: /extensions/catalog
+          importName: DynamicMarketplacePluginRouter
+      mountPoints:
+        - mountPoint: internal.plugins/tab
+          importName: DynamicMarketplacePluginContent
+          config:
+            path: catalog
+            title: Catalog
