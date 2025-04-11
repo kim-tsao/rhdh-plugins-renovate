@@ -170,7 +170,7 @@
     },
     {
       "groupName": "Core Backstage packages",
-      "dependencyDashboardApproval": true,
+      "enable": false,
       "matchDepNames": ["/^@backstage//"]
     }              
   ],
