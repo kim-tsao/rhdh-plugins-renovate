@@ -124,13 +124,13 @@
     {
       "description": "Group all minor/patch updates for RHDH Plugins",
       "matchFileNames": [
-        "/workspaces/bulk-import/**",
-        "/workspaces/global-floating-action-button/**",
-        "/workspaces/global-header/**",
-        "/workspaces/homepage/**", 
-        "/workspaces/marketplace/**", 
-        "/workspaces/openshift-image-registry/**",
-        "/workspaces/theme"
+        "workspaces/bulk-import/**",
+        "workspaces/global-floating-action-button/**",
+        "workspaces/global-header/**",
+        "workspaces/homepage/**", 
+        "workspaces/marketplace/**", 
+        "workspaces/openshift-image-registry/**",
+        "workspaces/theme"
       ],
       "additionalBranchPrefix": "rhdh ",
       "addLabels": ["team/rhdh"],
@@ -141,9 +141,9 @@
     {
       "description": "Group all minor/patch updates for PAI Plugins",
       "matchFileNames": [
-        "/workspaces/adoption-insights/**",
-        "/workspaces/ai-integrations/**",
-        "/workspaces/lightspeed/**"
+        "workspaces/adoption-insights/**",
+        "workspaces/ai-integrations/**",
+        "workspaces/lightspeed/**"
       ],
       "additionalBranchPrefix": "pai ",
       "addLabels": ["team/pai"],
@@ -154,7 +154,7 @@
     {
       "description": "Group all minor/patch updates for Orchestrator Plugins",
       "matchFileNames": [
-        "/workspaces/orchestrator/**"
+        "workspaces/orchestrator/**"
       ],
       "additionalBranchPrefix": "orchestrator ",
       "addLabels": ["team/orchestrator"],
@@ -165,7 +165,7 @@
     {
       "description": "Group all minor/patch updates for Sandbox Plugins",
       "matchFileNames": [
-        "/workspaces/sandbox/**"
+        "workspaces/sandbox/**"
       ],
       "additionalBranchPrefix": "sandbox ",
       "addLabels": ["team/sandbox"],
