@@ -118,7 +118,7 @@
     },
     {
       "description": "Group all minor updates for RHDH Plugins",
-      "extends":["github>kim-tsao/rhdh-plugins-renovate:rhdh-presets.json"],
+      "extends":["github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-presets"],
       "additionalBranchPrefix": "rhdh ",
       "addLabels": ["team/rhdh"],
       "matchUpdateTypes": ["minor"],
