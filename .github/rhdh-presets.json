@@ -1,6 +1,7 @@
 {
   "packageRules": [
     {
+      "groupName": "all RHDH workspaces",
       "matchFileNames": [
           "workspaces/bulk-import/**",
           "workspaces/global-floating-action-button/**",
