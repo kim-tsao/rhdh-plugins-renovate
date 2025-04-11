@@ -117,28 +117,15 @@
       "allowedVersions": "<5.0.0"
     },
     {
-      "description": "Group all minor updates for RHDH Plugins",
-      "additionalBranchPrefix": "rhdh ",
-      "extends":["github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-presets"],
-      "addLabels": ["team/rhdh"],
-      "matchUpdateTypes": ["minor"],
-      "matchDepTypes": ["dependencies", "peerDependencies"],
-      "groupName": "RHDH Dependencies (minor)"
-    },
-    {
       "description": "Group all patch updates for RHDH Plugins",
-      "additionalBranchPrefix": "rhdh ",
       "extends":["github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-presets"],
-      "addLabels": ["team/rhdh"],
       "matchUpdateTypes": ["patch"],
       "matchDepTypes": ["dependencies", "peerDependencies"],
       "groupName": "RHDH Dependencies (patch)"
     },   
     {
       "description": "Group all minor/patch devdependencies updates for RHDH Plugins",
-      "additionalBranchPrefix": "rhdh ",
       "extends":["github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-presets"],
-      "addLabels": ["team/rhdh"],
       "matchUpdateTypes": ["minor", "patch"],
       "matchDepTypes": ["devDependencies"],
       "groupName": "RHDH DevDependencies (non-major)"

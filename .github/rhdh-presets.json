@@ -10,7 +10,14 @@
           "workspaces/marketplace/**", 
           "workspaces/openshift-image-registry/**",
           "workspaces/theme"
-      ]
-    }
+      ], 
+      "addLabels": ["team/rhdh"]      
+    },
+    {
+      "description": "Group all minor updates for RHDH Plugins",
+      "matchUpdateTypes": ["minor"],
+      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "groupName": "RHDH Dependencies (minor)"
+    }    
   ]
 }
