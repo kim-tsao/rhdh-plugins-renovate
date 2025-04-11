@@ -117,11 +117,6 @@
       "allowedVersions": "<5.0.0"
     },
     {
-      "groupName": "Core Backstage packages",
-      "dependencyDashboardApproval": true,
-      "matchDepNames": ["/^@backstage//"]
-    },
-    {
       "description": "Group all minor/patch updates for RHDH Plugins",
       "matchFileNames": [
         "workspaces/bulk-import/**",
@@ -172,7 +167,12 @@
       "matchUpdateTypes": ["minor", "patch"],
       "matchDepTypes": ["dependencies", "peerDependencies"],
       "groupName": "Sandbox Dependencies (non-major)"
-    }               
+    },
+    {
+      "groupName": "Core Backstage packages",
+      "dependencyDashboardApproval": true,
+      "matchDepNames": ["/^@backstage//"]
+    }              
   ],
   "ignorePaths": ["**/dist-dynamic/**"]
 }
