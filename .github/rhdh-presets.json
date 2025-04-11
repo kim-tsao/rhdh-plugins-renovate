@@ -1,0 +1,17 @@
+{
+  "packageRules": [
+    {
+      "groupName": "all RHDH workspaces",
+      "groupSlug": "all-rhdh-workspaces",
+      "matchFileNames": [
+          "workspaces/bulk-import/**",
+          "workspaces/global-floating-action-button/**",
+          "workspaces/global-header/**",
+          "workspaces/homepage/**", 
+          "workspaces/marketplace/**", 
+          "workspaces/openshift-image-registry/**",
+          "workspaces/theme"
+      ]
+    }
+  ]
+}

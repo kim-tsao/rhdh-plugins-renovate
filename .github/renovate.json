@@ -118,15 +118,7 @@
     },
     {
       "description": "Group all minor updates for RHDH Plugins",
-      "matchFileNames": [
-        "workspaces/bulk-import/**",
-        "workspaces/global-floating-action-button/**",
-        "workspaces/global-header/**",
-        "workspaces/homepage/**", 
-        "workspaces/marketplace/**", 
-        "workspaces/openshift-image-registry/**",
-        "workspaces/theme"
-      ],
+      "extends":["github>kim-tsao/rhdh-plugins-renovate:rhdh-presets.json"],
       "additionalBranchPrefix": "rhdh ",
       "addLabels": ["team/rhdh"],
       "matchUpdateTypes": ["minor"],
