@@ -117,6 +117,13 @@
       "allowedVersions": "<5.0.0"
     },
     {
+      "description": "Group all minor updates for RHDH Plugins",
+      "extends":["github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-presets"],
+      "matchUpdateTypes": ["minor"],
+      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "groupName": "RHDH Dependencies (minor)"
+    },
+    {
       "description": "Group all patch updates for RHDH Plugins",
       "extends":["github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-presets"],
       "matchUpdateTypes": ["patch"],
