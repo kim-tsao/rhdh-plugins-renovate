@@ -5,7 +5,8 @@
     ":rebaseStalePrs",
     "group:linters",
     "group:test",
-    ":preserveSemverRanges"
+    ":preserveSemverRanges",
+    "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-base-presets(Bulk Import)"    
   ],
   "ignorePresets": [":pinDevDependencies", ":pinDigest", "docker:pinDigests"],
   "labels": ["dependencies"],
@@ -115,13 +116,7 @@
     {
       "matchPackageNames": ["yn"],
       "allowedVersions": "<5.0.0"
-    },
-    {
-      "description": "Include Bulk Import rules",
-      "extends":[
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-base-presets(Bulk Import)"
-       ]
-    },      
+    },  
     {
       "description": "Group all minor/patch updates for PAI Plugins",
       "matchFileNames": [
