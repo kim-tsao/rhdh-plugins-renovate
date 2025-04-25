@@ -15,14 +15,12 @@
     },
     {
       "description": "Group all patch updates for RHDH Bulk Import Plugins",
-      "extends":["github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-presets"],
       "matchUpdateTypes": ["patch"],
       "matchDepTypes": ["dependencies", "peerDependencies"],
       "groupName": "RHDH Bulk Import Dependencies (patch)"
     },   
     {
       "description": "Group all minor/patch devdependencies updates for RHDH Bulk Import Plugins",
-      "extends":["github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-presets"],
       "matchUpdateTypes": ["minor", "patch"],
       "matchDepTypes": ["devDependencies"],
       "groupName": "RHDH Bulk Import DevDependencies (non-major)"
