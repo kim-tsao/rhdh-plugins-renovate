@@ -117,11 +117,9 @@
       "allowedVersions": "<5.0.0"
     },
     {
-      "description": "Include workspace package rules",
+      "description": "Include Bulk Import rules",
       "extends":[
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-bulk-import-presets",
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-common-ui-presets",
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-marketplace-presets"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-base-presets(Bulk Import)"
        ]
     },      
     {
