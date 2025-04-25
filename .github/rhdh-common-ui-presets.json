@@ -1,0 +1,32 @@
+{
+  "packageRules": [
+    {
+      "description": "all RHDH workspaces",
+      "matchFileNames": [
+          "workspaces/global-floating-action-button/**",
+          "workspaces/global-header/**",
+          "workspaces/homepage/**", 
+          "workspaces/theme/**"
+      ], 
+      "addLabels": ["team/rhdh"]      
+    },
+    {
+      "description": "Group all minor updates for RHDH Common UI Plugins",
+      "matchUpdateTypes": ["minor"],
+      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "groupName": "RHDH Common UI Dependencies (minor)"
+    },
+    {
+      "description": "Group all patch updates for RHDH Common UI Plugins",
+      "matchUpdateTypes": ["patch"],
+      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "groupName": "RHDH Common UI Dependencies (patch)"
+    },   
+    {
+      "description": "Group all minor/patch devdependencies updates for RHDH Common UI Plugins",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "RHDH Common UI DevDependencies (non-major)"
+    }   
+  ]
+}

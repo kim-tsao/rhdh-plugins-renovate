@@ -1,0 +1,30 @@
+{
+  "packageRules": [
+    {
+      "description": "all marketplace workspaces",
+      "matchFileNames": [
+          "workspaces/marketplace/**", 
+          "workspaces/openshift-image-registry/**"
+      ], 
+      "addLabels": ["team/rhdh"]      
+    },
+    {
+      "description": "Group all minor updates for RHDH Marketplace Plugins",
+      "matchUpdateTypes": ["minor"],
+      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "groupName": "RHDH Marketplace Dependencies (minor)"
+    },
+    {
+      "description": "Group all patch updates for RHDH Marketplace Plugins",
+      "matchUpdateTypes": ["patch"],
+      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "groupName": "RHDH Marketplace  Dependencies (patch)"
+    },   
+    {
+      "description": "Group all minor/patch devdependencies updates for RHDH Marketplace Plugins",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "RHDH Marketplace DevDependencies (non-major)"
+    }   
+  ]
+}
