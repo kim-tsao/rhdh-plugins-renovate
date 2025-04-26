@@ -7,7 +7,7 @@
     "group:test",
     ":preserveSemverRanges"    
   ],
-  "ignorePresets": [":pinDevDependencies", ":pinDigest", "docker:pinDigests"],
+  "ignorePresets": [":pinDevDependencies", ":pinDigest", "docker:pinDigests", "group:monorepos"],
   "labels": ["dependencies"],
   "postUpdateOptions": ["yarnDedupeHighest"],
   "osvVulnerabilityAlerts": true,
