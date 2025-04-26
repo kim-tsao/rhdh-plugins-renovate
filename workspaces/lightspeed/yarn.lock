@@ -7941,17 +7941,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/openai@npm:^0.3.0":
-  version: 0.3.16
-  resolution: "@langchain/openai@npm:0.3.16"
+"@langchain/openai@npm:^0.5.0":
+  version: 0.5.7
+  resolution: "@langchain/openai@npm:0.5.7"
   dependencies:
     js-tiktoken: ^1.0.12
-    openai: ^4.77.0
+    openai: ^4.93.0
     zod: ^3.22.4
     zod-to-json-schema: ^3.22.3
   peerDependencies:
-    "@langchain/core": ">=0.2.26 <0.4.0"
-  checksum: 98147633629ec918434307de722e9aa7fb018a95d4e443d44d0bc782cc19e77a3a398eb07b691a78ff4a547ed4b707f941627f9a15e4a0803f5c24e0e4eac94b
+    "@langchain/core": ">=0.3.48 <0.4.0"
+  checksum: 1ed7cd052043f2878137854beb2451bf64fcbe29b90386096aa065d789668b4450550bcf18c6063e9d9effad2e8b2699d9626fd94e7048eff126a0131f7d5563
   languageName: node
   linkType: hard
 
@@ -9695,9 +9695,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/chatbot@npm:2.2.0-prerelease.37":
-  version: 2.2.0-prerelease.37
-  resolution: "@patternfly/chatbot@npm:2.2.0-prerelease.37"
+"@patternfly/chatbot@npm:2.2.1":
+  version: 2.2.1
+  resolution: "@patternfly/chatbot@npm:2.2.1"
   dependencies:
     "@patternfly/react-code-editor": ^6.1.0
     "@patternfly/react-core": ^6.1.0
@@ -9717,7 +9717,7 @@ __metadata:
   peerDependencies:
     react: ^17 || ^18
     react-dom: ^17 || ^18
-  checksum: 4ac87d4d9e0ee9adcdffc129999c61d87e3c3fcd1f7c2be87c7481683a06a9bee3d4f6bb5af80a65436775d668017b638c2045604e2ebeb980e6f5f1f59c5b17
+  checksum: a71bb5bc053bfbf7519a82e7bed1edfce5f83edf1101763429e3f51990543f5219579a295a5c483d0683f0035f552af5560486cd105ff65b2d3ea1c4cdb02843
   languageName: node
   linkType: hard
 
@@ -9738,71 +9738,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-core@npm:6.2.0-prerelease.26":
-  version: 6.2.0-prerelease.26
-  resolution: "@patternfly/react-core@npm:6.2.0-prerelease.26"
+"@patternfly/react-core@npm:6.2.1, @patternfly/react-core@npm:^6.1.0":
+  version: 6.2.1
+  resolution: "@patternfly/react-core@npm:6.2.1"
   dependencies:
-    "@patternfly/react-icons": ^6.2.0-prerelease.7
-    "@patternfly/react-styles": ^6.2.0-prerelease.6
-    "@patternfly/react-tokens": ^6.2.0-prerelease.6
+    "@patternfly/react-icons": ^6.2.1
+    "@patternfly/react-styles": ^6.2.1
+    "@patternfly/react-tokens": ^6.2.1
     focus-trap: 7.6.4
     react-dropzone: ^14.3.5
     tslib: ^2.8.1
   peerDependencies:
     react: ^17 || ^18
     react-dom: ^17 || ^18
-  checksum: d4ab04a4240bd8a36d5303122761b9162ead11cf517303faadb3b73ba1dd76f728c2329abc57889b0e23861ee37e26539a270c065ea4707b9e65091d298868b9
+  checksum: 152265fb90d16ebdec2e413bec694903387c2e20e09387cd2d86f95ee70ad6ee9feec081f40a04a1157499c8c2eb04ab4627428cc8c36781a788015acb9fd092
   languageName: node
   linkType: hard
 
-"@patternfly/react-core@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "@patternfly/react-core@npm:6.1.0"
-  dependencies:
-    "@patternfly/react-icons": ^6.1.0
-    "@patternfly/react-styles": ^6.1.0
-    "@patternfly/react-tokens": ^6.1.0
-    focus-trap: 7.6.2
-    react-dropzone: ^14.3.5
-    tslib: ^2.8.1
+"@patternfly/react-icons@npm:^6.1.0, @patternfly/react-icons@npm:^6.2.1":
+  version: 6.2.2
+  resolution: "@patternfly/react-icons@npm:6.2.2"
   peerDependencies:
     react: ^17 || ^18
     react-dom: ^17 || ^18
-  checksum: df93e6c595ba473c28ac0a00def064232b5d621a286974f1d4d02ae17430f66f4e925611393130f6400e35c2c178d2f07b0507b35fbbd37e59cd5a410fd0d908
+  checksum: 59255579f63ad5dd22b4fe9e18b8868a0e9aadf32e26dfd2b9bcaf25c8792fcc2cab187eda7ea8356c915c354cf3adee6a614e60aad4e769791757b26da90929
   languageName: node
   linkType: hard
 
-"@patternfly/react-icons@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "@patternfly/react-icons@npm:6.1.0"
-  peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: bc70947e49a76c9b6814d6c9a6b19faa2c0f5b853898689cf4c79634feba08fbbcd3c7acf9369fc8e62f59c0784d8bf50c7212c67ef920014b86e53e9d1880ab
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-icons@npm:^6.2.0-prerelease.7":
-  version: 6.2.0-prerelease.12
-  resolution: "@patternfly/react-icons@npm:6.2.0-prerelease.12"
-  peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: 69078379166167c40f704d0dec327ca29fd2d67d4c2f968fce31f29db125be32271c9f38e6bf834cbdaaa7ac440c5b8ced62290855da732d512d70a05a8b395d
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-styles@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "@patternfly/react-styles@npm:6.1.0"
-  checksum: 73653190157b4a1f1239094b56579517f2a16919d1fb831d294d6fd209c1bd7ec7b5016038fd62e6565afdb4668f22b0c3d4187e0c4be6bc2f2a615e34669c27
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-styles@npm:^6.2.0-prerelease.6":
-  version: 6.2.0-prerelease.11
-  resolution: "@patternfly/react-styles@npm:6.2.0-prerelease.11"
-  checksum: 3d4e6451a8a3567dd4db3879e1ab61e24bcd82abc7691fe25c13de721343155aa03dd19d7319c3e4ba374e29830bf371daf54acf9f1565da017855f5f9a3229e
+"@patternfly/react-styles@npm:^6.1.0, @patternfly/react-styles@npm:^6.2.1":
+  version: 6.2.2
+  resolution: "@patternfly/react-styles@npm:6.2.2"
+  checksum: 77a8ebcf550fba86ef6e3b73fc60e2eba1210d9fa0fd53a415311bf82615fdc5052d2bf79a57c24a2868ccc543a3155b03cb369fb5703452e1d2f4b96f57f4d1
   languageName: node
   linkType: hard
 
@@ -9823,17 +9789,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-tokens@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "@patternfly/react-tokens@npm:6.1.0"
-  checksum: 5de010cc64eef5009e1403a6f4e2e03314864e9f3ee9a9fcfde20fcae76b5288d9be4e260eeafaa3485b2addceed4fe68c37d488f48916cfd35c227e412cec68
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-tokens@npm:^6.2.0-prerelease.6":
-  version: 6.2.0-prerelease.11
-  resolution: "@patternfly/react-tokens@npm:6.2.0-prerelease.11"
-  checksum: 7771475882f0dd2d9fd0cb7c68f694ef391a397d527432f4fd17841b17eb10b9c73059b9b1c781ba5253e7931fa90712b01b41c019387b1d92e21e6d23ce45cc
+"@patternfly/react-tokens@npm:^6.1.0, @patternfly/react-tokens@npm:^6.2.1":
+  version: 6.2.2
+  resolution: "@patternfly/react-tokens@npm:6.2.2"
+  checksum: 27183f771e400c8fcf611545dd46ade39c6459506bcb9aa020346de69dda9717e75665c8aad92609dab93de4c2f0472e7958d1c127b0f722beb552dda3a1fbca
   languageName: node
   linkType: hard
 
@@ -10545,7 +10504,7 @@ __metadata:
     "@backstage/plugin-permission-node": ^0.8.7
     "@ianvs/prettier-plugin-sort-imports": ^4.4.0
     "@langchain/core": ^0.3.0
-    "@langchain/openai": ^0.3.0
+    "@langchain/openai": ^0.5.0
     "@red-hat-developer-hub/backstage-plugin-lightspeed-common": "workspace:^"
     "@spotify/prettier-config": ^15.0.0
     "@types/express": 4.17.21
@@ -10553,7 +10512,7 @@ __metadata:
     express: ^4.21.1
     http-proxy-middleware: ^3.0.2
     msw: 2.7.3
-    node-fetch: 2.6.9
+    node-fetch: 2.7.0
     prettier: 3.4.2
     supertest: 6.3.4
   languageName: unknown
@@ -10590,8 +10549,8 @@ __metadata:
     "@material-ui/core": ^4.9.13
     "@material-ui/lab": ^4.0.0-alpha.61
     "@mui/icons-material": ^6.1.8
-    "@patternfly/chatbot": 2.2.0-prerelease.37
-    "@patternfly/react-core": 6.2.0-prerelease.26
+    "@patternfly/chatbot": 2.2.1
+    "@patternfly/react-core": 6.2.1
     "@red-hat-developer-hub/backstage-plugin-lightspeed-common": "workspace:^"
     "@spotify/prettier-config": ^15.0.0
     "@tanstack/react-query": ^5.59.15
@@ -20547,15 +20506,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"focus-trap@npm:7.6.2":
-  version: 7.6.2
-  resolution: "focus-trap@npm:7.6.2"
-  dependencies:
-    tabbable: ^6.2.0
-  checksum: b5873f8e506d3f466d9823d2f144612d3938f3c74c3be3db922052e5e54fd41a3a46889f8219f16f60d1ce5aff9e0a7fef9dea03ca0da96820c2ea36243236f7
-  languageName: node
-  linkType: hard
-
 "focus-trap@npm:7.6.4":
   version: 7.6.4
   resolution: "focus-trap@npm:7.6.4"
@@ -20920,7 +20870,7 @@ __metadata:
 
 "fsevents@patch:fsevents@2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -20929,7 +20879,7 @@ __metadata:
 
 "fsevents@patch:fsevents@^2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.3
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.3#~builtin<compat/fsevents>::version=2.3.3&hash=df0bf1"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.3#~builtin<compat/fsevents>::version=2.3.3&hash=18f3a7"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -27473,21 +27423,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:2.6.9":
-  version: 2.6.9
-  resolution: "node-fetch@npm:2.6.9"
-  dependencies:
-    whatwg-url: ^5.0.0
-  peerDependencies:
-    encoding: ^0.1.0
-  peerDependenciesMeta:
-    encoding:
-      optional: true
-  checksum: acb04f9ce7224965b2b59e71b33c639794d8991efd73855b0b250921382b38331ffc9d61bce502571f6cc6e11a8905ca9b1b6d4aeb586ab093e2756a1fd190d0
-  languageName: node
-  linkType: hard
-
-"node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7, node-fetch@npm:^2.6.9, node-fetch@npm:^2.7.0":
+"node-fetch@npm:2.7.0, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7, node-fetch@npm:^2.6.9, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -28024,9 +27960,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.52.6, openai@npm:^4.77.0":
-  version: 4.77.4
-  resolution: "openai@npm:4.77.4"
+"openai@npm:^4.52.6, openai@npm:^4.93.0":
+  version: 4.96.0
+  resolution: "openai@npm:4.96.0"
   dependencies:
     "@types/node": ^18.11.18
     "@types/node-fetch": ^2.6.4
@@ -28036,13 +27972,16 @@ __metadata:
     formdata-node: ^4.3.2
     node-fetch: ^2.6.7
   peerDependencies:
+    ws: ^8.18.0
     zod: ^3.23.8
   peerDependenciesMeta:
+    ws:
+      optional: true
     zod:
       optional: true
   bin:
     openai: bin/cli
-  checksum: b49027c284d2db9955d890442462ff88f7f6002269c6b42496753a417d86e99e618e5acc8e5911a303e2063483b4a998647e203fdfde0dd43c865087841d7900
+  checksum: d54ba62c4ad298ce3ea4ccc124f6fef0a81c2121ec830a363a1bec7ab909fa2a0e768c5decd738fe2db4f7fd0f5bbed8c8200debf52dd3ca4b9ba58aa1c11860
   languageName: node
   linkType: hard
 
@@ -31330,7 +31269,7 @@ __metadata:
 
 "resolve@patch:resolve@1.22.8#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.4#~builtin<compat/resolve>, resolve@patch:resolve@~1.22.1#~builtin<compat/resolve>, resolve@patch:resolve@~1.22.2#~builtin<compat/resolve>":
   version: 1.22.8
-  resolution: "resolve@patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=07638b"
   dependencies:
     is-core-module: ^2.13.0
     path-parse: ^1.0.7
@@ -31343,7 +31282,7 @@ __metadata:
 
 "resolve@patch:resolve@^2.0.0-next.5#~builtin<compat/resolve>":
   version: 2.0.0-next.5
-  resolution: "resolve@patch:resolve@npm%3A2.0.0-next.5#~builtin<compat/resolve>::version=2.0.0-next.5&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A2.0.0-next.5#~builtin<compat/resolve>::version=2.0.0-next.5&hash=07638b"
   dependencies:
     is-core-module: ^2.13.0
     path-parse: ^1.0.7
@@ -34329,31 +34268,31 @@ __metadata:
 
 "typescript@patch:typescript@5.4.2#~builtin<compat/typescript>":
   version: 5.4.2
-  resolution: "typescript@patch:typescript@npm%3A5.4.2#~builtin<compat/typescript>::version=5.4.2&hash=5adc0c"
+  resolution: "typescript@patch:typescript@npm%3A5.4.2#~builtin<compat/typescript>::version=5.4.2&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 797ac213c03a19749181c745647b4cab03d13bf4b6b738b05a3426f46c6b540f908989e839d9b0c89d7a4ee2bdb50493b4d4898d4ef1c897c3e9d0b082e78a67
+  checksum: c1b669146bca5529873aae60870e243fa8140c85f57ca32c42f898f586d73ce4a6b4f6bb02ae312729e214d7f5859a0c70da3e527a116fdf5ad00c9fc733ecc6
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@~5.3.0#~builtin<compat/typescript>":
   version: 5.3.3
-  resolution: "typescript@patch:typescript@npm%3A5.3.3#~builtin<compat/typescript>::version=5.3.3&hash=e012d7"
+  resolution: "typescript@patch:typescript@npm%3A5.3.3#~builtin<compat/typescript>::version=5.3.3&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 4e604a9e107ce0c23b16a2f8d79d0531d4d8fe9ebbb7a8c395c66998c39892f0e0a071ef0b0d4e66420a8ec2b8d6cfd9cdb29ba24f25b37cba072e9282376df9
+  checksum: f61375590b3162599f0f0d5b8737877ac0a7bc52761dbb585d67e7b8753a3a4c42d9a554c4cc929f591ffcf3a2b0602f65ae3ce74714fd5652623a816862b610
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@~5.5.0#~builtin<compat/typescript>":
   version: 5.5.4
-  resolution: "typescript@patch:typescript@npm%3A5.5.4#~builtin<compat/typescript>::version=5.5.4&hash=379a07"
+  resolution: "typescript@patch:typescript@npm%3A5.5.4#~builtin<compat/typescript>::version=5.5.4&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: e14c87e8bd51f9ac741051a2c3bde75b2a3ab17dee2c50239f7e1a0868673f3b7d4d87684df41a59a8f57c6ddc5d06d65d120764d992441af5de07b98cf9c67b
+  checksum: fc52962f31a5bcb716d4213bef516885e4f01f30cea797a831205fc9ef12b405a40561c40eae3127ab85ba1548e7df49df2bcdee6b84a94bfbe3a0d7eff16b14
   languageName: node
   linkType: hard
 
