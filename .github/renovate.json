@@ -118,13 +118,9 @@
     },  
     {
       "description": "all Bulk Import workspaces",
-      "matchFileNames": [
-          "workspaces/bulk-import/**"
-      ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-base-presets(Bulk Import)"
-      ],      
-      "addLabels": ["team/rhdh", "bulk-import"]      
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-bulk-import-presets"
+      ]      
     },
     {
       "description": "all Common UI workspaces",
