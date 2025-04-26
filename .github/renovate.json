@@ -113,7 +113,7 @@
           "workspaces/theme/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-base-presets(Common UI)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-common-ui-presets(Common UI)"
       ],   
       "addLabels": ["team/rhdh", "common-ui"]      
     },
@@ -124,7 +124,7 @@
           "workspaces/openshift-image-registry/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-base-presets(Marketplace)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-marketplace-presets(Marketplace)"
       ],        
       "addLabels": ["team/rhdh", "marketplace"]      
     },        

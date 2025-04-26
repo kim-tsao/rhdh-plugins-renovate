@@ -6,25 +6,32 @@
           "workspaces/marketplace/**", 
           "workspaces/openshift-image-registry/**"
       ], 
-      "addLabels": ["team/rhdh"]      
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Marketplace)"
+      ],        
+      "addLabels": ["team/rhdh", "marketplace"]      
     },
     {
-      "description": "Group all minor updates for RHDH Marketplace Plugins",
-      "matchUpdateTypes": ["minor"],
-      "matchDepTypes": ["dependencies", "peerDependencies"],
-      "groupName": "RHDH Marketplace Dependencies (minor)"
+      "description": "all marketplace workspaces",
+      "matchFileNames": [
+          "workspaces/marketplace/**", 
+          "workspaces/openshift-image-registry/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Marketplace)"
+      ],        
+      "addLabels": ["team/rhdh", "marketplace"]      
     },
     {
-      "description": "Group all patch updates for RHDH Marketplace Plugins",
-      "matchUpdateTypes": ["patch"],
-      "matchDepTypes": ["dependencies", "peerDependencies"],
-      "groupName": "RHDH Marketplace  Dependencies (patch)"
-    },   
-    {
-      "description": "Group all minor/patch devdependencies updates for RHDH Marketplace Plugins",
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchDepTypes": ["devDependencies"],
-      "groupName": "RHDH Marketplace DevDependencies (non-major)"
-    }   
+      "description": "all marketplace workspaces",
+      "matchFileNames": [
+          "workspaces/marketplace/**", 
+          "workspaces/openshift-image-registry/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Marketplace)"
+      ],        
+      "addLabels": ["team/rhdh", "marketplace"]      
+    }
   ]
 }
