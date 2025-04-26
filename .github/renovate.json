@@ -106,27 +106,15 @@
     },
     {
       "description": "all Common UI workspaces",
-      "matchFileNames": [
-          "workspaces/global-floating-action-button/**",
-          "workspaces/global-header/**",
-          "workspaces/homepage/**", 
-          "workspaces/theme/**"
-      ], 
       "extends": [
         "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-common-ui-presets(Common UI)"
-      ],   
-      "addLabels": ["team/rhdh", "common-ui"]      
+      ]   
     },
     {
       "description": "all Marketplace workspaces",
-      "matchFileNames": [
-          "workspaces/marketplace/**", 
-          "workspaces/openshift-image-registry/**"
-      ], 
       "extends": [
         "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-marketplace-presets(Marketplace)"
-      ],        
-      "addLabels": ["team/rhdh", "marketplace"]      
+      ]    
     },        
     {
       "description": "Group all minor/patch updates for PAI Plugins",
