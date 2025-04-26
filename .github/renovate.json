@@ -81,25 +81,7 @@
       "matchUpdateTypes": [
         "patch"
       ]
-    },    
-    {
-      "groupName": "types (minor)",
-      "matchPackageNames": [
-        "@types/{/,}**"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ]
-    },    
-    {
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "groupName": "types (patch)",
-      "matchPackageNames": [
-        "@types/{/,}**"
-      ]
-    },      
+    },       
     {
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions"
