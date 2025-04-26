@@ -1,0 +1,34 @@
+{
+  "packageRules": [
+    {
+      "description": "all RHDH Adoption Insights workspaces",
+      "matchFileNames": [
+        "workspaces/adoption-insights/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Adoption Insights)"
+      ],  
+      "addLabels": ["team/pai", "adoption-insights"]              
+    },
+    {
+      "description": "all RHDH Adoption Insights workspaces",
+      "matchFileNames": [
+        "workspaces/adoption-insights/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Adoption Insights)"
+      ],  
+      "addLabels": ["team/pai", "adoption-insights"]              
+    },
+    {
+      "description": "all RHDH Adoption Insights workspaces",
+      "matchFileNames": [
+        "workspaces/adoption-insights/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Adoption Insights)"
+      ],  
+      "addLabels": ["team/pai", "adoption-insights"]              
+    }        
+  ]
+}

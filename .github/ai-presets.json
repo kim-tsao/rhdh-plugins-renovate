@@ -1,0 +1,37 @@
+{
+  "packageRules": [
+    {
+      "description": "all PAI workspaces",
+      "matchFileNames": [
+        "workspaces/ai-integrations/**",
+        "workspaces/lightspeed/**"
+      ],
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(PAI)"
+      ],  
+      "addLabels": ["team/pai", "pai"]              
+    },
+    {
+      "description": "all PAI workspaces",
+      "matchFileNames": [
+        "workspaces/ai-integrations/**",
+        "workspaces/lightspeed/**"
+      ],
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(PAI)"
+      ],  
+      "addLabels": ["team/pai", "pai"]              
+    },
+    {
+      "description": "all PAI workspaces",
+      "matchFileNames": [
+        "workspaces/ai-integrations/**",
+        "workspaces/lightspeed/**"
+      ],
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(PAI)"
+      ],  
+      "addLabels": ["team/pai", "pai"]              
+    }        
+  ]
+}

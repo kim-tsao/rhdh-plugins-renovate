@@ -21,67 +21,7 @@
   "major": {
     "dependencyDashboardApproval": true
   },  
-  "packageRules": [
-    {
-      "groupName": "DevDependencies (minor)",
-      "matchDepTypes": [
-        "devDependencies"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ]
-    },    
-    {
-      "groupName": "DevDependencies (patch)",
-      "matchDepTypes": [
-        "devDependencies"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ]
-    },      
-    {
-      "groupName": "Test packages (minor)",
-      "matchDepNames": [
-        "@playwright/{/,}**", 
-        "msw", 
-        "@testing-library/{/,}**"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ]      
-    }, 
-    {
-      "groupName": "Test packages (patch)",
-      "matchDepNames": [
-        "@playwright/{/,}**", 
-        "msw", 
-        "@testing-library/{/,}**"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ]
-    },           
-    {
-      "groupName": "Kie Tools (minor)",
-      "matchDepNames": [
-        "@kie-tools-core/{/,}**", 
-        "@kie-tools/{/,}**"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ]
-    },
-    {
-      "groupName": "Kie Tools (patch)",
-      "matchDepNames": [
-        "@kie-tools-core/{/,}**", 
-        "@kie-tools/{/,}**"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ]
-    },       
+  "packageRules": [     
     {
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions"
@@ -107,27 +47,26 @@
     {
       "description": "all Common UI workspaces",
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-common-ui-presets(Common UI)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-common-ui-presets"
       ]   
     },
     {
       "description": "all Marketplace workspaces",
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-marketplace-presets(Marketplace)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-marketplace-presets"
       ]    
-    },        
+    },   
     {
-      "description": "Group all minor/patch updates for PAI Plugins",
-      "matchFileNames": [
-        "workspaces/adoption-insights/**",
-        "workspaces/ai-integrations/**",
-        "workspaces/lightspeed/**"
-      ],
-      "additionalBranchPrefix": "pai ",
-      "addLabels": ["team/pai"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchDepTypes": ["dependencies", "peerDependencies"],
-      "groupName": "PAI Dependencies (non-major)"
+      "description": "all Adoption Insights Plugins",
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-adoption-insights-presets"
+      ]    
+    },  
+    {
+      "description": "All PAI Plugins",
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/ai-presets"
+      ]    
     }, 
     {
       "description": "Group all minor/patch updates for Orchestrator Plugins",
