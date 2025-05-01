@@ -6,7 +6,7 @@
         "workspaces/sandbox/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Sandbox)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-minor-presets(Sandbox)"
       ],  
       "addLabels": ["team/sandbox", "sandbox"]              
     },
@@ -16,7 +16,7 @@
         "workspaces/sandbox/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Sandbox)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-patch-presets(Sandbox)"
       ],  
       "addLabels": ["team/sandbox", "sandbox"]              
     },
@@ -26,7 +26,7 @@
         "workspaces/sandbox/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Sandbox)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-devdependency-presets(Sandbox)"
       ],  
       "addLabels": ["team/sandbox", "sandbox"]              
     }        

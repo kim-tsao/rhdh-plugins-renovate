@@ -7,7 +7,7 @@
           "workspaces/openshift-image-registry/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Marketplace)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-minor-presets(Marketplace)"
       ],        
       "addLabels": ["team/rhdh", "marketplace"]      
     },
@@ -18,7 +18,7 @@
           "workspaces/openshift-image-registry/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Marketplace)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-patch-presets(Marketplace)"
       ],        
       "addLabels": ["team/rhdh", "marketplace"]      
     },
@@ -29,7 +29,7 @@
           "workspaces/openshift-image-registry/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Marketplace)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-devdependency-presets(Marketplace)"
       ],        
       "addLabels": ["team/rhdh", "marketplace"]      
     }

@@ -6,7 +6,7 @@
         "workspaces/orchestrator/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Orchestrator)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-minor-presets(Orchestrator)"
       ],  
       "addLabels": ["team/orchestrator", "orchestrator"]              
     },
@@ -16,7 +16,7 @@
         "workspaces/orchestrator/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Orchestrator)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-patch-presets(Orchestrator)"
       ],  
       "addLabels": ["team/orchestrator", "orchestrator"]              
     },
@@ -26,7 +26,7 @@
         "workspaces/orchestrator/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Orchestrator)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-devdependency-presets(Orchestrator)"
       ],  
       "addLabels": ["team/orchestrator", "orchestrator"]              
     }        

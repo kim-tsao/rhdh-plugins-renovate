@@ -7,7 +7,7 @@
         "workspaces/lightspeed/**"
       ],
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(PAI)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-minor-presets(PAI)"
       ],  
       "addLabels": ["team/pai", "pai"]              
     },
@@ -18,7 +18,7 @@
         "workspaces/lightspeed/**"
       ],
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(PAI)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-patch-presets(PAI)"
       ],  
       "addLabels": ["team/pai", "pai"]              
     },
@@ -29,7 +29,7 @@
         "workspaces/lightspeed/**"
       ],
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(PAI)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-devdependency-presets(PAI)"
       ],  
       "addLabels": ["team/pai", "pai"]              
     }        

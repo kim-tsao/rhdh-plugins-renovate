@@ -7,7 +7,7 @@
           "workspaces/global-header/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Global UI)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-minor-presets(Global UI)"
       ],       
       "addLabels": ["team/rhdh", "global-ui"]      
     },
@@ -18,7 +18,7 @@
           "workspaces/global-header/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Global UI)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-patch-presets(Global UI)"
       ],       
       "addLabels": ["team/rhdh", "global-ui"]      
     },
@@ -29,7 +29,7 @@
           "workspaces/global-header/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Global UI)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-devdependency-presets(Global UI)"
       ],       
       "addLabels": ["team/rhdh", "global-ui"]      
     } 

@@ -6,7 +6,7 @@
           "workspaces/theme/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Theme)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-minor-presets(Theme)"
       ],       
       "addLabels": ["team/rhdh", "theme"]      
     },
@@ -16,7 +16,7 @@
           "workspaces/theme/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Theme)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-patch-presets(Theme)"
       ],       
       "addLabels": ["team/rhdh", "theme"]      
     },
@@ -26,7 +26,7 @@
           "workspaces/theme/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Theme)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-devdependency-presets(Theme)"
       ],       
       "addLabels": ["team/rhdh", "theme"]      
     } 

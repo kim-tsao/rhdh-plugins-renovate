@@ -16,7 +16,7 @@
         "workspaces/adoption-insights/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Adoption Insights)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-patch-presets(Adoption Insights)"
       ],  
       "addLabels": ["team/pai", "adoption-insights"]              
     },
@@ -26,7 +26,7 @@
         "workspaces/adoption-insights/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Adoption Insights)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-devdependency-presets(Adoption Insights)"
       ],  
       "addLabels": ["team/pai", "adoption-insights"]              
     }        

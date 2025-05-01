@@ -6,7 +6,7 @@
           "workspaces/bulk-import/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Bulk Import)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-patch-presets(Bulk Import)"
       ],  
       "addLabels": ["team/rhdh", "bulk-import"]              
     },
@@ -16,7 +16,7 @@
           "workspaces/bulk-import/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Bulk Import)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-devdependency-presets(Bulk Import)"
       ],  
       "addLabels": ["team/rhdh", "bulk-import"]              
     },
@@ -26,7 +26,7 @@
           "workspaces/bulk-import/**"
       ], 
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Bulk Import)"
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/base/rhdh-minor-presets(Bulk Import)"
       ],  
       "addLabels": ["team/rhdh", "bulk-import"]              
     }            
