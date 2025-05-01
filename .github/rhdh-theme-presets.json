@@ -1,0 +1,34 @@
+{
+  "packageRules": [
+    {
+      "description": "all theme plugins",
+      "matchFileNames": [
+          "workspaces/theme/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Common UI)"
+      ],       
+      "addLabels": ["team/rhdh", "theme"]      
+    },
+    {
+      "description": "all theme plugins",
+      "matchFileNames": [
+          "workspaces/theme/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Common UI)"
+      ],       
+      "addLabels": ["team/rhdh", "theme"]      
+    },
+    {
+      "description": "all theme plugins",
+      "matchFileNames": [
+          "workspaces/theme/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Common UI)"
+      ],       
+      "addLabels": ["team/rhdh", "theme"]      
+    } 
+  ]
+}

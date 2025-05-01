@@ -1,43 +1,37 @@
 {
   "packageRules": [
     {
-      "description": "all RHDH workspaces",
+      "description": "all global ui workspaces",
       "matchFileNames": [
           "workspaces/global-floating-action-button/**",
-          "workspaces/global-header/**",
-          "workspaces/homepage/**", 
-          "workspaces/theme/**"
+          "workspaces/global-header/**"
       ], 
       "extends": [
         "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Common UI)"
       ],       
-      "addLabels": ["team/rhdh", "common-ui"]      
+      "addLabels": ["team/rhdh", "global-ui"]      
     },
     {
-      "description": "all RHDH workspaces",
+      "description": "all global ui workspaces",
       "matchFileNames": [
           "workspaces/global-floating-action-button/**",
-          "workspaces/global-header/**",
-          "workspaces/homepage/**", 
-          "workspaces/theme/**"
+          "workspaces/global-header/**"
       ], 
       "extends": [
         "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Common UI)"
       ],       
-      "addLabels": ["team/rhdh", "common-ui"]      
+      "addLabels": ["team/rhdh", "global-ui"]      
     },
     {
-      "description": "all RHDH workspaces",
+      "description": "all global ui workspaces",
       "matchFileNames": [
           "workspaces/global-floating-action-button/**",
-          "workspaces/global-header/**",
-          "workspaces/homepage/**", 
-          "workspaces/theme/**"
+          "workspaces/global-header/**"
       ], 
       "extends": [
         "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Common UI)"
       ],       
-      "addLabels": ["team/rhdh", "common-ui"]      
+      "addLabels": ["team/rhdh", "global-ui"]      
     } 
   ]
 }
