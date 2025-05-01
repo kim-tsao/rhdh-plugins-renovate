@@ -41,15 +41,15 @@
     {
       "description": "all Bulk Import workspaces",
       "extends": [
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-bulk-import-presets",
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-homepage-presets",
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-theme-presets",       
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-global-ui-presets",       
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-marketplace-presets",
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-adoption-insights-presets",
-        "github>kim-tsao/rhdh-plugins-renovate//.github/ai-presets",   
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-orchestrator-presets",
-        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-sandbox-presets"                       
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-bulk-import-presets",
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-homepage-presets",
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-theme-presets",       
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-global-ui-presets",       
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-marketplace-presets",
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-adoption-insights-presets",
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-ai-presets",   
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-orchestrator-presets",
+        "github>kim-tsao/rhdh-plugins-renovate//.github/renovate-presets/workspace/rhdh-sandbox-presets"                       
       ]      
     },
     {
