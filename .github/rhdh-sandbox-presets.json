@@ -1,0 +1,34 @@
+{
+  "packageRules": [
+    {
+      "description": "all Sandbox plugins",
+      "matchFileNames": [
+        "workspaces/sandbox/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Sandbox)"
+      ],  
+      "addLabels": ["team/sandbox", "sandbox"]              
+    },
+    {
+      "description": "all Sandbox plugins",
+      "matchFileNames": [
+        "workspaces/sandbox/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Sandbox)"
+      ],  
+      "addLabels": ["team/sandbox", "sandbox"]              
+    },
+    {
+      "description": "all Sandbox plugins",
+      "matchFileNames": [
+        "workspaces/sandbox/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Sandbox)"
+      ],  
+      "addLabels": ["team/sandbox", "sandbox"]              
+    }        
+  ]
+}

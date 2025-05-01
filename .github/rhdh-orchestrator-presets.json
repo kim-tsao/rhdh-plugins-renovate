@@ -1,0 +1,34 @@
+{
+  "packageRules": [
+    {
+      "description": "all Orchestrator plugins",
+      "matchFileNames": [
+        "workspaces/orchestrator/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-minor-presets(Orchestrator)"
+      ],  
+      "addLabels": ["team/orchestrator", "orchestrator"]              
+    },
+    {
+      "description": "all Orchestrator plugins",
+      "matchFileNames": [
+        "workspaces/orchestrator/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-patch-presets(Orchestrator)"
+      ],  
+      "addLabels": ["team/orchestrator", "orchestrator"]              
+    },
+    {
+      "description": "all Orchestrator plugins",
+      "matchFileNames": [
+        "workspaces/orchestrator/**"
+      ], 
+      "extends": [
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-devdependency-presets(Orchestrator)"
+      ],  
+      "addLabels": ["team/orchestrator", "orchestrator"]              
+    }        
+  ]
+}

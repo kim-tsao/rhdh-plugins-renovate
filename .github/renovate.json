@@ -47,30 +47,10 @@
         "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-global-ui-presets",       
         "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-marketplace-presets",
         "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-adoption-insights-presets",
-        "github>kim-tsao/rhdh-plugins-renovate//.github/ai-presets"                        
+        "github>kim-tsao/rhdh-plugins-renovate//.github/ai-presets",   
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-orchestrator-presets",
+        "github>kim-tsao/rhdh-plugins-renovate//.github/rhdh-sandbox-presets"                       
       ]      
-    }, 
-    {
-      "description": "Group all minor/patch updates for Orchestrator Plugins",
-      "matchFileNames": [
-        "workspaces/orchestrator/**"
-      ],
-      "additionalBranchPrefix": "orchestrator ",
-      "addLabels": ["team/orchestrator"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchDepTypes": ["dependencies", "peerDependencies"],
-      "groupName": "Orchestrator Dependencies (non-major)"
-    },
-    {
-      "description": "Group all minor/patch updates for Sandbox Plugins",
-      "matchFileNames": [
-        "workspaces/sandbox/**"
-      ],
-      "additionalBranchPrefix": "sandbox ",
-      "addLabels": ["team/sandbox"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchDepTypes": ["dependencies", "peerDependencies"],
-      "groupName": "Sandbox Dependencies (non-major)"
     },
     {
       "groupName": "Core Backstage packages",
