@@ -58,7 +58,7 @@
   "ignorePaths": ["**/dist-dynamic/**"],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
-    "enabled": true,
+    "enabled": false,
     "labels": ["dependencies", "security"]
   }
 }
