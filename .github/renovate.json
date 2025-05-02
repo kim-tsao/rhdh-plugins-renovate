@@ -10,6 +10,8 @@
   "ignorePresets": [":pinDevDependencies", ":pinDigest", "docker:pinDigests", "group:monorepos"],
   "labels": ["dependencies"],
   "postUpdateOptions": ["yarnDedupeHighest"],
+  "prHourlyLimit": 2,
+  "prConcurrencyLimit": 10,
   "npm": {
     "minimumReleaseAge": "3 days"
   },
