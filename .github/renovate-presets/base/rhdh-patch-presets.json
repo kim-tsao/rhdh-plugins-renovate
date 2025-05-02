@@ -3,6 +3,7 @@
     "description": "Group all patch updates for RHDH {{arg0}} Plugins",
     "matchUpdateTypes": ["patch"],
     "matchDepTypes": ["dependencies", "peerDependencies"],
-    "groupName": "RHDH {{arg0}} Dependencies (patch)"
+    "groupName": "RHDH {{arg0}} Dependencies (patch)",
+    "automerge": true
   }
 }
