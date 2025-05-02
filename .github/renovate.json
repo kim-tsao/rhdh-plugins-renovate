@@ -11,7 +11,7 @@
   "labels": ["dependencies"],
   "postUpdateOptions": ["yarnDedupeHighest"],
   "prHourlyLimit": 2,
-  "prConcurrencyLimit": 10,
+  "prConcurrentLimit": 5,
   "npm": {
     "minimumReleaseAge": "3 days"
   },
