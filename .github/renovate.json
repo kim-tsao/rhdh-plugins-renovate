@@ -12,7 +12,7 @@
   "postUpdateOptions": ["yarnDedupeHighest"],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
-    "enabled": false,
+    "enabled": true,
     "labels": ["dependencies", "security"]
   },
   "npm": {
