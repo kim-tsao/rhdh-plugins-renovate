@@ -1934,13 +1934,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/parse@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "@changesets/parse@npm:0.4.0"
+"@changesets/parse@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "@changesets/parse@npm:0.4.1"
   dependencies:
-    "@changesets/types": ^6.0.0
+    "@changesets/types": ^6.1.0
     js-yaml: ^3.13.1
-  checksum: 3dd970b244479746233ebd357cfff3816cf9f344ebf2cf0c7c55ce8579adfd3f506978e86ad61222dc3acf1548a2105ffdd8b3e940b3f82b225741315cee2bf0
+  checksum: e45c0c818266294c57147e51dad34e145c1e7ae2edf1607a7944eb165ac6fa75dd9080bd3bb02b08f56bd49b33a6ed1bb6d77e452692b89562a604ce9d9218e4
   languageName: node
   linkType: hard
 
@@ -1951,10 +1951,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/types@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@changesets/types@npm:6.0.0"
-  checksum: d528b5d712f62c26ea422c7d34ccf6eac57a353c0733d96716db3c796ecd9bba5d496d48b37d5d46b784dc45b69c06ce3345fa3515df981bb68456cad68e6465
+"@changesets/types@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@changesets/types@npm:6.1.0"
+  checksum: 2d01231ddb835b48f9c7963a92ffee7ff347be407cdd52b2a9dcfd2a6e75f2ba13d3009d954a8bca4b622d4cac369f86b496ee9c55f5b788e295ca2d3cba4b94
   languageName: node
   linkType: hard
 
@@ -3633,7 +3633,7 @@ __metadata:
   dependencies:
     "@backstage/cli": ^0.27.0
     "@backstage/cli-node": ^0.2.2
-    "@changesets/parse": ^0.4.0
+    "@changesets/parse": ^0.4.1
     "@manypkg/get-packages": ^2.2.2
     "@octokit/rest": ^20.1.1
     "@red-hat-developer-hub/cli": "portal:./workspaces/repo-tools/packages/cli"
