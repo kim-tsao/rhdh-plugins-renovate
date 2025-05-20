@@ -12,3 +12,4 @@ updates:
     open-pull-requests-limit: 0
     allow:
       - dependency-type: "production"
+      - dependency-type: "all"
