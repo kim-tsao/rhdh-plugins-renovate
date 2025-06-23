@@ -51,8 +51,8 @@
     },
     {
       "groupName": "Core Backstage packages",
-      "enabled": false,
-      "matchPackageNames": [
+      "dependencyDashboardApproval": true,
+      "matchDepNames": [
         "/^@backstage//",
         "/^@backstage-community//"]
     }              
