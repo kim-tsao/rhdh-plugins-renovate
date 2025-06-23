@@ -52,7 +52,9 @@
     {
       "groupName": "Core Backstage packages",
       "enabled": false,
-      "matchDepNames": ["/^@backstage*//"]
+      "matchPackageNames": [
+        "/^@backstage//",
+        "/^@backstage-community//"]
     }              
   ],
   "ignorePaths": ["**/dist-dynamic/**"],
