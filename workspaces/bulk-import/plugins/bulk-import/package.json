@@ -43,7 +43,7 @@
     "@backstage/plugin-permission-react": "^0.4.31",
     "@backstage/theme": "^0.6.4",
     "@janus-idp/shared-react": "^2.13.1",
-    "@mui/icons-material": "5.16.14",
+    "@mui/icons-material": "5.18.0",
     "@mui/material": "^5.12.2",
     "@mui/styles": "^6.1.6",
     "@red-hat-developer-hub/backstage-plugin-bulk-import-common": "workspace:^",
@@ -64,8 +64,8 @@
     "@backstage/core-app-api": "^1.15.5",
     "@backstage/dev-utils": "^1.1.7",
     "@backstage/test-utils": "^1.7.5",
-    "@playwright/test": "1.50.1",
-    "@redhat-developer/red-hat-developer-hub-theme": "0.4.0",
+    "@playwright/test": "1.56.1",
+    "@redhat-developer/red-hat-developer-hub-theme": "0.5.2",
     "@spotify/prettier-config": "^15.0.0",
     "@testing-library/dom": "^10.0.0",
     "@testing-library/jest-dom": "^6.0.0",
@@ -78,7 +78,7 @@
     "react": "16.13.1 || ^17.0.0 || ^18.0.0",
     "react-dom": "16.13.1 || ^17.0.0 || ^18.0.0",
     "react-router-dom": "^6.0.0",
-    "start-server-and-test": "2.0.12"
+    "start-server-and-test": "2.1.2"
   },
   "scalprum": {
     "name": "janus-idp.backstage-plugin-bulk-import",
