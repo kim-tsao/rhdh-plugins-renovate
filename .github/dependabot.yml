@@ -9,7 +9,7 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
-      time: "15:39"
+      time: "16:30"
       timezone: Canada/Eastern
     exclude-paths:
       - "workspaces/*/packages"
