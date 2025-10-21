@@ -9,6 +9,8 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    exclude-paths:
+      - "workspaces/*/packages"
     open-pull-requests-limit: 3
     allow:
       - dependency-type: "all"
